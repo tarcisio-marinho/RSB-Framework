@@ -15,7 +15,7 @@ from RSA.gera_chaves import *
 from RSA.descriptografa import *
 from RSA.criptografa import *
 
-
+#
 # AES para criptografar a senha privada
 def conexao(meuIP):
     # servidor
