@@ -110,9 +110,10 @@ def conexao(meuIP):
         if(b==1):
             print('IP '+str(endereco[0])+' conectou ao servidor')
             try: # tenta abrir e escrever os clientes que foram conectados
-                arq=open('conectados.txt','a')
+                arq=open('logs/conectados.txt','a')
             except:
-                arq=open('conectados.txt','w') # cria arquivo
+                os.mkdir('logs')
+                arq=open('logs/conectados.txt','w') # cria arquivo
             arq.write(str(endereco[0])+' - '+str(hora)+'\n') # escreve no arquivo dos hosts conectados
 
             #envia o nome de usuario que a pessoa esta logada
@@ -145,9 +146,10 @@ def conexao(meuIP):
                 hora=datetime.datetime.fromtimestamp(int(time.time())).strftime('%Y-%m-%d %H:%M:%S')
                 historico.append(str(descriptografado).replace(']','').replace('[','').replace("'","").replace(',',''))# HISTORICO DO QUE FOI ENVIADO PELO CLIENTE
                 try:
-                    arq=open('historico.txt','a')
+                    arq=open('logs/historico.txt','a')
                 except:
-                    arq=open('historico.txt','w') # cria arquivo
+                    os.mkdir('logs')
+                    arq=open('logs/historico.txt','w') # cria arquivo
                 arq.write(str(historico)+' - ' + str(hora)+'\n')
 
                 # pega a pergunta e executa no servidor
