@@ -6,6 +6,8 @@ import socket
 import sys
 sys.path.append('../')
 from RSA.criptografa import *
+from RSA.descriptografa import *
+from RSA.gera_chaves import *
 
 
 # CLIENTE TAMBEM TEM QUE GERAR AS CHAVES PUBLICAS E PRIVADAS
@@ -18,9 +20,32 @@ def conecta(serverHost):
     except socket.error as erro:
         print('Erro ocorrido: '+str(erro))
         exit()
-    # chave publica
+    # chave publica do servidor
     data = socket_obj.recv(1024) # recebeu do servidor a chave publica
     chave_publica=data.split(',') # separou a chave -> N e E
+
+    # TESTE PARA GERAR CHAVES CORRETAS do cliente
+    while True:
+        try:
+            palavra_teste='oi'
+            gerador()
+            arquivo1=open('chave_publica.txt','r')
+            n=arquivo1.readline()
+            n=int(n)
+            e=arquivo1.readline()
+            e=int(e)
+            criptografado=cipher(palavra_teste,n,e)
+            descriptografado=descifra(criptografado,n)
+            novo=str(descriptografado)
+            novo=novo.replace(']','').replace('[','').replace("'","").replace(',','').replace(' ','')
+            if(novo==palavra_teste): # achou as chaves corretas -> para e vai para a conexão
+                break
+            else:
+                continua_while=0
+        except ValueError as e:
+            print('Erro '+str(e) +'tentando proxima chave')
+    # GEROU A CHAVE
+    
 
     senha=raw_input('Digite a senha para conectar ao servidor: ')
 
@@ -40,7 +65,7 @@ def conecta(serverHost):
         print('deu algum erro\nSaindo...')
         exit()
 
-    # Recebe o nome de usuario conectado 
+    # Recebe o nome de usuario conectado
     usuario_conectado=socket_obj.recv(1024)
     usuario_conectado=usuario_conectado.replace('\n','')
 
