@@ -116,9 +116,20 @@ def conexao(meuIP):
                 arq=open('logs/conectados.txt','w') # cria arquivo
             arq.write(str(endereco[0])+' - '+str(hora)+'\n') # escreve no arquivo dos hosts conectados
 
+
+
+            ###### CODIGO DE RECEBER AS CHAVES PUBLICAS DO CLIENTE
+            chave_publica_cliente=conexao.recv(1024)
+            chave_publica_cliente=chave_publica_cliente.split(',')
+
+
             #envia o nome de usuario que a pessoa esta logada
-            a = subprocess.check_output('whoami', shell=True)
-            conexao.send(a)
+            logado = subprocess.check_output('whoami', shell=True)
+            logado=logado.replace('\n','')
+            criptografado=cipher(logado,int(chave_publica_cliente[0]),int(chave_publica_cliente[1]))
+            string=str(criptografado)
+            string=string.replace('[',' ').replace(']',' ').replace(' ','')
+            conexao.send(string)
 
             # recebe dados enviados pelo cliente
             while True:
@@ -188,7 +199,10 @@ def conexao(meuIP):
 
                 try:
                     a = subprocess.check_output(comando, shell=True)
-                    conexao.send(str(a)) # envia o retorno -> 0 == comando correto
+                    criptografado=cipher(a,int(chave_publica_cliente[0]),int(chave_publica_cliente[1]))
+                    string=str(criptografado)
+                    string=string.replace('[',' ').replace(']',' ').replace(' ','')
+                    conexao.send(string)
                 except subprocess.CalledProcessError as e:
                     print(e)
                     conexao.send(str(e))
