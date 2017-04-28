@@ -2,6 +2,9 @@
 servidor e cliente ssh
 Protocolo RSA para troca de chaves publica
 
+Não foi feito para ser eficiente ou seguro suficiente para ser usado em aplicação real
+Feito apenas por diversão e aprendizado
+Não use para nada importante
 # Primeira vez rodando
     ~$ python servidor.py
     ~$ insira a senha para o cliente entrar no servidor
