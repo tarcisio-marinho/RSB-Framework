@@ -4,7 +4,8 @@ foi algo criado por mim mesmo, seguindo algumas instruções básicas de criaç�
 
 O algoritmo de geração das chaves é o seguinte:
 
-- Geração da Chave Pública:
+
+Geração da Chave Pública:
 - gera o número P aleatório, P tem que ser primo
 - gera o número Q também aleatório e também primo
 - calcula N, sendo a multiplicação de P por Q
@@ -16,11 +17,14 @@ O algoritmo de geração das chaves é o seguinte:
 - mdc(phi(N), E) == 1, se não satisfazer a isso, terá que ser gerado outro número aleatório E
 - A chave pública é composta por N e E
 
-- Geração da Chave Privada:
+
+Geração da Chave Privada:
 - para encontrar o D, precisa satisfazer a igualdade mod(D^E, phi(N)) == 1
 - a função modular se dá pelo resto de divisão entre D^E e phi(N)
 - se for igual a 1, achou o D, se não, o D é incrementado até satisfazer a condição
 
+
+Criptografar texto:
 - A chave privada é guardada pelo servidor, e a pública é enviada para o cliente
 - O cliente possuí o E e o N
 - Para o cliente criptografar o conteúdo que será enviado para o servidor ele tem que seguir o seguinte algoritmo:
@@ -30,6 +34,8 @@ O algoritmo de geração das chaves é o seguinte:
 - mod(111^E, N) -> o resultado vai ser o valor criptografado e que será enviado para o servidor
 - esse processo se repete para todos os caracteres da string que será enviada
 
+
+Descriptografar:
 - Para o servidor descriptografar o texto cifrado, ele deve seguir o seguinte algoritmo:
 - para o valor cifrado de cada caracter -> valor^D -> sendo D a chave privada
 - o resultado ele utiliza na função modular, mod(resultado, N) -> retornando ao valor 111
