@@ -19,7 +19,7 @@ Não use para nada importante
 - historico.txt -> guarda os comandos digitados pelo cliente
 - conectados.txt -> guarda os IP's conectados no servidor
 
-**Para saber mais sobre o algoritmo de criptografia:**
+**Para saber mais sobre o algoritmo usado na criptografia:**
 
 
 https://github.com/tarcisio-marinho/SSH/blob/master/RSA/README.md
