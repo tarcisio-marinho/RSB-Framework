@@ -7,7 +7,7 @@ Feito apenas por diversão e aprendizado
 Não use para nada importante
 # Primeira vez rodando
     ~$ python servidor.py
-    ~$ configure a senha do servidor para o cliente conectar no servidor
+    ~$ configure a senha do servidor para o cliente conectar ao servidor
     ~$ python cliente.py
 - a senha é salva no arquivo senha.txt em forma de hash SHA1
 - na pasta logs são salvos os arquivos 
