@@ -9,7 +9,8 @@ from RSA.criptografa import *
 from RSA.descriptografa import *
 from RSA.gera_chaves import *
 
-
+# inicia as cores
+BLUE, RED, WHITE, YELLOW, MAGENTA, GREEN, END = '\33[94m', '\033[91m', '\33[97m', '\33[93m', '\033[1;35m', '\033[1;32m', '\033[0m'
 # CLIENTE TAMBEM TEM QUE GERAR AS CHAVES PUBLICAS E PRIVADAS
 # AES para salvar as senhas privadas e publicas
 def conecta(serverHost):
@@ -26,8 +27,11 @@ def conecta(serverHost):
 
 
 
-
-    senha=raw_input('Digite a senha para conectar ao servidor: ')
+    try:
+        senha=raw_input('Digite a senha para conectar ao servidor: ')
+    except KeyboardInterrupt:
+        print('\nVocê escolheu sair...\n')
+        exit()
 
     criptografado=cipher(senha,int(chave_publica[0]),int(chave_publica[1])) # criptografou o texto
     string=str(criptografado)
@@ -94,7 +98,12 @@ def conecta(serverHost):
 
     while True:
         # texto a ser criptografado e enviado
-        frase=raw_input(usuario_conectado+'@'+serverHost+':~$ ')
+        print('{0}'+usuario_conectado+'@'+serverHost+'{1}:~$ {2}').format(GREEN,BLUE,END)
+        try:
+            frase=raw_input()
+        except KeyboardInterrupt:
+            print('\nVocê escolheu sair\n')
+            exit()
 
         # criptografou o texto
         criptografado=cipher(frase,int(chave_publica[0]),int(chave_publica[1]))
@@ -106,26 +115,11 @@ def conecta(serverHost):
 
         # DESCRIPTOGRAFAR RETORNO DO SERVIDOR
         retorno_servidor=socket_obj.recv(1024)
-        retorno_servidor=retorno_servidor.split(',')
-        comando_criptografado=[]
-        novo_recebido=[]
-        for caracter in retorno_servidor:
-            caracter=caracter.replace('L','')
-            novo_recebido.append(caracter) # adiciona na nova lista
-        descriptografado=descifra(novo_recebido,n)
-        descriptografado=str(descriptografado).replace(']','').replace('[','').replace("'","").replace(',','')
-        descriptografado=descriptografado.split('  ')
-        for palavra in descriptografado:
-            palavra=palavra.replace(' ','')
-            comando_criptografado.append(palavra)
-        # FIM DESCRIPTOGRAFA
-        comando_criptografado=str(comando_criptografado).replace('[','').replace(']','').replace("'","")
-        comando_criptografado=comando_criptografado.replace('\\n','\n')
-        comando_criptografado=comando_criptografado.replace("\\",'')
-        if(comando_criptografado=='exit'):
+
+        if(retorno_servidor=='exit'):
             print('saindo...')
             exit()
-        print(comando_criptografado)
+        print(retorno_servidor)
 
 
 serverHost='127.0.0.1' # CLIENTE TEM QUE INSERIR O IP DO HOST QUE ELE QUER SE CONECTAR
