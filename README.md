@@ -8,8 +8,10 @@ Feito apenas por diversão e aprendizado.
 
 Não use para nada importante
 # Primeira vez rodando
+    **Em um terminal**
     ~$ python servidor.py
     ~$ configure a senha do servidor para o cliente conectar ao servidor
+    **Outro terminal**
     ~$ python cliente.py
 - a senha é salva no arquivo senha.txt em forma de hash SHA1
 - na pasta logs são salvos os arquivos 
