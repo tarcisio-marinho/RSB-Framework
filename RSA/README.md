@@ -41,3 +41,14 @@ O algoritmo de geração das chaves é o seguinte:
 - o resultado ele utiliza na função modular, mod(resultado, N) -> retornando ao valor 111
 - que deverá ser convertido para ascii
 - o processo repete para todos os caracteres criptografados do texto cifrado
+
+
+**Mais sobre o algoritmo RSA**
+
+https://pt.m.wikipedia.org/wiki/RSA
+
+https://www.lambda3.com.br/2012/12/entendendo-de-verdade-a-criptografia-rsa/
+
+http://www.lambda3.com.br/2012/12/entendendo-de-verdade-a-criptografia-rsa-parte-ii/
+
+http://www.lambda3.com.br/2013/01/entendendo-de-verdade-a-criptografia-rsa-parte-iii/
