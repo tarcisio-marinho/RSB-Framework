@@ -36,6 +36,7 @@ def conexao(meuIP):
         socket_obj.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # se der ctrl + c, ele para de escutar na porta
         socket_obj.bind((meuIP, porta))
         socket_obj.listen(1) # escuta apenas 1 cliente
+        os.system('clear')
         print('Servidor rodando')
 
 
@@ -78,17 +79,23 @@ def conexao(meuIP):
         print(recebido)
 
         # DESCRIPTOGRAFA
-        senha_descriptografada=[]
-        novo_recebido=[]
-        for caracter in recebido: # remove o L, que tem no fim dos caracteres
-            caracter=caracter.replace('L','')
-            novo_recebido.append(caracter) # adiciona na nova lista
-        descriptografado=descifra(novo_recebido,n)
-        descriptografado=str(descriptografado).replace(']','').replace('[','').replace("'","").replace(',','')
-        descriptografado=descriptografado.split('  ')
-        for palavra in descriptografado:
-            palavra=palavra.replace(' ','')
-            senha_descriptografada.append(palavra)
+        try:
+            senha_descriptografada=[]
+            novo_recebido=[]
+            for caracter in recebido: # remove o L, que tem no fim dos caracteres
+                caracter=caracter.replace('L','')
+                novo_recebido.append(caracter) # adiciona na nova lista
+            descriptografado=descifra(novo_recebido,n)
+            descriptografado=str(descriptografado).replace(']','').replace('[','').replace("'","").replace(',','')
+            descriptografado=descriptografado.split('  ')
+            for palavra in descriptografado:
+                palavra=palavra.replace(' ','')
+                senha_descriptografada.append(palavra)
+        except ValueError:
+            #cliente saiu
+            conexao.close()
+            print('cliente desconectado antes de entrar')
+            continue
         # FIM DESCRIPTOGRAFA
 
         print(senha_descriptografada)
@@ -115,7 +122,7 @@ def conexao(meuIP):
                 os.mkdir('logs')
                 arq=open('logs/conectados.txt','w') # cria arquivo
             arq.write(str(endereco[0])+' - '+str(hora)+'\n') # escreve no arquivo dos hosts conectados
-
+            
 
 
             ###### CODIGO DE RECEBER AS CHAVES PUBLICAS DO CLIENTE
@@ -138,19 +145,31 @@ def conexao(meuIP):
                 novo_recebido=[] # O PEDIDO DO CLIENTE ORIGINAL
                 historico=[] # HISTORICO DOS PEDIDOS DO CLIENTE
 
-                recebido = conexao.recv(1024) # recebe o que o cliente mandou
+                try:
+                    recebido = conexao.recv(1024) # recebe o que o cliente mandou
+                except socket.error as erro:
+                    print('erro '+ str(e)+', Usuario saiu\n Erro causado por PS AUX\n')
+                    break
+                    continue
                 recebido=recebido.split(',') # separa em uma lista
 
                 # DESCRIPTOGRAFA
-                for caracter in recebido: # remove o L, que tem no fim dos caracteres
-                    caracter=caracter.replace('L','')
-                    novo_recebido.append(caracter) # adiciona na nova lista
-                descriptografado=descifra(novo_recebido,n)
-                descriptografado=str(descriptografado).replace(']','').replace('[','').replace("'","").replace(',','')
-                descriptografado=descriptografado.split('  ')
-                for palavra in descriptografado:
-                    palavra=palavra.replace(' ','')
-                    novo_descriptografado.append(palavra)
+                try:
+                    for caracter in recebido: # remove o L, que tem no fim dos caracteres
+                        caracter=caracter.replace('L','')
+                        novo_recebido.append(caracter) # adiciona na nova lista
+                    descriptografado=descifra(novo_recebido,n)
+                    descriptografado=str(descriptografado).replace(']','').replace('[','').replace("'","").replace(',','')
+                    descriptografado=descriptografado.split('  ')
+                    for palavra in descriptografado:
+                        palavra=palavra.replace(' ','')
+                        novo_descriptografado.append(palavra)
+                except ValueError:
+                    #cliente saiu
+                    conexao.close()
+                    break
+                    print('cliente escolheu sair\n')
+                    continue
                 # FIM DESCRIPTOGRAFA
 
                 # tenta abrir e escrever os clientes que foram conectados
@@ -168,10 +187,12 @@ def conexao(meuIP):
                 print(novo_descriptografado)
                 # se o usuario digitar exit
                 if(str(novo_descriptografado).replace(']','').replace('[','').replace("'","").replace(',','')=='exit'):
-                    print('saindo\n')
                     conexao.send('exit')
                     conexao.close()
-                    exit()
+                    print('\nusuario escolheu sair\n')
+                    break
+                    continue
+
 
                 if(tam==1):
                     comando = novo_descriptografado[0]
@@ -199,10 +220,7 @@ def conexao(meuIP):
 
                 try:
                     a = subprocess.check_output(comando, shell=True)
-                    criptografado=cipher(a,int(chave_publica_cliente[0]),int(chave_publica_cliente[1]))
-                    string=str(criptografado)
-                    string=string.replace('[',' ').replace(']',' ').replace(' ','')
-                    conexao.send(string)
+                    conexao.send(a)
                 except subprocess.CalledProcessError as e:
                     print(e)
                     conexao.send(str(e))
