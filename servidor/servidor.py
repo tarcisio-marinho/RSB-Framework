@@ -122,7 +122,7 @@ def conexao(meuIP):
                 os.mkdir('logs')
                 arq=open('logs/conectados.txt','w') # cria arquivo
             arq.write(str(endereco[0])+' - '+str(hora)+'\n') # escreve no arquivo dos hosts conectados
-            
+
 
 
             ###### CODIGO DE RECEBER AS CHAVES PUBLICAS DO CLIENTE
@@ -194,29 +194,8 @@ def conexao(meuIP):
                     continue
 
 
-                if(tam==1):
-                    comando = novo_descriptografado[0]
 
-                elif(tam==2):
-                    comando = str(novo_descriptografado[0])+' '+str(novo_descriptografado[1])
-
-                elif(tam==3):
-                    comando = str(novo_descriptografado[0])+' '+str(novo_descriptografado[1])+' '+str(novo_descriptografado[2])
-
-                elif(tam==4):
-                    comando = str(novo_descriptografado[0])+' '+str(novo_descriptografado[1])+' '+str(novo_descriptografado[2])+' '+str(novo_descriptografado[3])
-
-                elif(tam==5):
-                    comando = str(novo_descriptografado[0])+' '+str(novo_descriptografado[1])+' '+str(novo_descriptografado[2])+' '+str(novo_descriptografado[3])+' '+str(novo_descriptografado[4])
-
-                elif(tam==6):
-                    comando = str(novo_descriptografado[0])+' '+str(novo_descriptografado[1])+' '+str(novo_descriptografado[2])+' '+str(novo_descriptografado[3])+' '+str(novo_descriptografado[4])+' '+str(novo_descriptografado[5])
-
-                elif(tam==7):
-                    comando=str(novo_descriptografado[0])+' '+str(novo_descriptografado[1])+' '+str(novo_descriptografado[2])+' '+str(novo_descriptografado[3])+' '+str(novo_descriptografado[4])+' '+str(novo_descriptografado[5])+' '+str(novo_descriptografado[6])
-
-                elif(tam==8):
-                    comando = str(novo_descriptografado[0])+' '+str(novo_descriptografado[1])+' '+str(novo_descriptografado[2])+' '+str(novo_descriptografado[3])+' '+str(novo_descriptografado[4])+' '+str(novo_descriptografado[5])+' '+str(novo_descriptografado[6])+' '+str(novo_descriptografado[7])
+                comando = ' '.join([str(novo) for novo in novo_descriptografado])
 
                 try:
                     a = subprocess.check_output(comando, shell=True)
