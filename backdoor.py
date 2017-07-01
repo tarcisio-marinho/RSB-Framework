@@ -22,9 +22,14 @@ def conecta(IP, PORT):
 
 def executa(socket):
     while True:
-        dados = socket.recv(1024)
-        print(dados)
-
+        try:
+            dados = socket.recv(1024)
+            if(not dados): # servidor desconectou, recomeça
+                return
+            print(dados)
+            socket.send(dados)
+        except: # algum erro ocorreu, recomeça
+            return
     '''
         comando = ' '.join([str(novo) for novo in novo_descriptografado])
         try:

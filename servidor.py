@@ -33,6 +33,15 @@ def conecta(meuIP):
     	conexao,endereco=socket_obj.accept()
         retorno = conexao.recv(1024)
         print(retorno)
+        while True:
+            try:
+                comando = raw_input('-> ')
+                conexao.send(comando)
+                recebido = conexao.recv(1024)
+                print(recebido)
+            except socket.error as e:
+                print('Erro: '+ str(e))
+                break
 
     #conexao.close()
 
