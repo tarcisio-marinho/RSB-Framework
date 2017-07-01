@@ -2,6 +2,14 @@
 # coding=UTF-8
 # by Tarcisio marinho
 # github.com/tarcisio-marinho
+
+# programas padrao
+# ls
+# mkdir
+# upload
+# copiar arquivos
+# copiar pasta
+
 import os
 import datetime
 import time
@@ -10,10 +18,6 @@ import sha
 import subprocess
 import sys
 
-sys.path.append('../')
-from RSA.gera_chaves import *
-from RSA.descriptografa import *
-from RSA.criptografa import *
 
 #
 # AES para criptografar a senha privada

@@ -2,12 +2,14 @@
 # coding=UTF-8
 # by Tarcisio marinho
 # github.com/tarcisio-marinho
+
+# código do cliente
+# se cair -> reconecta
+# ao reiniciar o pc -> reconecta
+
+
+
 import socket
-import sys
-sys.path.append('../')
-from RSA.criptografa import *
-from RSA.descriptografa import *
-from RSA.gera_chaves import *
 
 # inicia as cores
 BLUE, RED, WHITE, YELLOW, MAGENTA, GREEN, END = '\33[94m', '\033[91m', '\33[97m', '\33[93m', '\033[1;35m', '\033[1;32m', '\033[0m'
