@@ -27,6 +27,27 @@ import sys
 # cores
 BLUE, RED, WHITE, YELLOW, MAGENTA, GREEN, END = '\33[94m', '\033[91m', '\33[97m', '\33[93m', '\033[1;35m', '\033[1;32m', '\033[0m'
 
+def upload(s, caminho_arquivo=False):
+    comando = subprocess.Popen('zenity --file-selection --title Escolha_um_arquivo', shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    retorno = comando.stdout.read()
+    nome_arquivo = os.path.basename(retorno)
+    retorno = retorno.replace('\n','')
+    caminho_arq = retorno.replace(" ", "\ ").replace(" (", " \("). replace(")", "\)")
+    if(os.path.isfile(retorno)):
+        s.send(nome_arquivo)
+        f = open(caminho_arq,'rb')
+        l = f.read(1024)
+        while(l):
+            s.send(l)
+            l = f.read(1024)
+
+def identifica(comando, s):
+    comando = comando.split(' ')
+    if(comando[0]=='upload')
+        upload(s)
+        comando = ' '.join(comando)
+        conexao.send(comando)
+
 def conecta(meuIP):
     while True:
         porta=1025
@@ -41,14 +62,16 @@ def conecta(meuIP):
         while True:
             try:
                 comando = raw_input('-> ')
-                conexao.send(comando)
+                identifica(comando, conexao)
                 recebido = conexao.recv(1024)
                 print(recebido)
             except socket.error as e:
                 print('Erro: '+ str(e))
                 break
 
-    #conexao.close()
+
+def help():
+    pass
 
 if __name__ == '__main__':
     meuIP='127.0.0.1'

