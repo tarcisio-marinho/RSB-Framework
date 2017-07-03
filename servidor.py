@@ -15,6 +15,7 @@
 # steal cookies
 # keylogger
 # localização geografica
+# trocar wallpaper do computador
 
 import os
 import datetime
