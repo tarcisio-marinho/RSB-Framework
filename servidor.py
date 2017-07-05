@@ -57,11 +57,14 @@ def upload(s, caminho_arquivo=False):
             s.send('upload')
             print('Enviando arquivo: '+ nome_arquivo)
             s.send(nome_arquivo)
-            f = open(caminho_arq,'rb')
-            l = f.read(1024)
+            try:
+                f = open(caminho_arq, 'rb')
+            except IOError:
+                f = open(retorno, 'rb')
+            l = f.read(512)
             while(l):
                 s.send(l)
-                l = f.read(1024)
+                l = f.read(512)
             print('Envio completo ...')
         else:
             print('Arquivo inválido ou não é arquivo')

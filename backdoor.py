@@ -48,15 +48,16 @@ def executa(socket):
             if(not dados): # servidor desconectou, recomeça
                 return
             else:
+                print(dados)
                 try:
                     if(dados=='upload'): # upload
                         print('recebendo arquivo')
                         nome_arquivo = socket.recv(1024)
                         f = open(nome_arquivo,'wb')
-                        l = socket.recv(1024)
+                        l = socket.recv(512)
                         while (l):
                             f.write(l)
-                            l = sc.recv(1024)
+                            l = sc.recv(512)
 
                     elif(dados=='shell'): # shell
                         while True:
