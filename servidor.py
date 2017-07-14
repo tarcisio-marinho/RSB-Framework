@@ -87,11 +87,11 @@ def shell(s):
     s.send('shell')
     while True:
         try:
-            executar = raw_input('\33[93m~> \033[0m')
+            executar = raw_input('\33[93m~$ \033[0m')
             s.send(executar)
             if(executar == 'exit'):
                 break
-            retorno = s.recv(1024)
+            retorno = s.recv(500000)
             if(not retorno):
                 print('maquina desconectada, tentando reconexão ...')
                 conecta('')

@@ -85,8 +85,10 @@ def executa(socket):
                                 else: # executa o comando
                                     comando = subprocess.Popen(dados, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)    # CRIAR THREADS PARA RODAR PROGRAMAS -> NÃO TER QUE ESPERAR O PROGRAMA FECHAR
                                     retorno = comando.stdout.read() + comando.stderr.read()
-                                    print('enviando',retorno)
-                                    socket.send(retorno)
+                                    if(retorno == ''):
+                                        socket.send('criado')
+                                    else:
+                                        socket.send(retorno)
 
                     elif(dados=='download'):
                         pass
