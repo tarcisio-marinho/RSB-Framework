@@ -94,9 +94,7 @@ def shell(s):
             retorno = s.recv(1024)
             if(not retorno):
                 print('maquina desconectada, tentando reconexão ...')
-                break
-            elif(retorno == ''):
-                print('2')
+                conecta('')
             else:
                 print(retorno)
         except KeyboardInterrupt:

