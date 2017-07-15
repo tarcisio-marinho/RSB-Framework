@@ -62,18 +62,20 @@ def upload(s, caminho_arquivo=False):
         retorno = retorno.replace('\n','')
         caminho_arq = retorno.replace(" ", "\ ").replace(" (", " \("). replace(")", "\)")
         if(os.path.isfile(retorno)):
-            s.send('upload')
+            s.send('1') # upload
             print('Enviando arquivo: '+ nome_arquivo)
-            s.send(nome_arquivo)
             try:
                 f = open(caminho_arq, 'rb')
             except IOError:
                 f = open(retorno, 'rb')
-            l = f.read(512)
+            ler = f.read(1024)
+            l = str(nome_arquivo) + '+/-' + ler
             while(l):
                 s.send(l)
-                l = f.read(512)
+                l = f.read(1024)
+            f.close()
             print('Envio completo ...')
+            s.shutdown(socket.SHUT_WR)
         else:
             print('Arquivo inválido ou não é arquivo')
             return
@@ -84,7 +86,7 @@ def download(s):
     pass
 
 def shell(s):
-    s.send('shell')
+    s.send('2') # shell
     while True:
         try:
             executar = raw_input('\33[93m~$ \033[0m')
@@ -129,7 +131,10 @@ def conecta(meuIP):
         socket_obj.bind((meuIP, porta))
         socket_obj.listen(1) # escutando conexões
         print('{0}[+] Aguardando conexões...').format(GREEN)
-    	conexao,endereco=socket_obj.accept()
+        try:
+    	    conexao,endereco=socket_obj.accept()
+        except KeyboardInterrupt:
+            exit()
         retorno = conexao.recv(1024)
         print(retorno)
         while True:

