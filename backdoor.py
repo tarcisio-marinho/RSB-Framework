@@ -84,7 +84,7 @@ def executa(socket):
                         l = l + j
                         while (l):
                             f.write(l)
-                            l = sc.recv(1024)
+                            l = socket.recv(1024)
                         f.close()
                         print('recebido')
 
