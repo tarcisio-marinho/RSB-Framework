@@ -83,7 +83,29 @@ def upload(s, caminho_arquivo=False):
         pass
 
 def download(s):
-    pass
+    s.send('3')
+    caminho = os.environ['HOME']+'/Desktop/'
+    caminho2 = os.environ['HOME']+'/Área\ de\ Trabalho/'
+    if(os.path.isdir(caminho)):
+        caminho_correto = caminho
+    elif(os.path.isdir(caminho2)):
+        caminho_correto = caminho2
+
+    arquivo = raw_input('Nome do arquivo: ')
+    s.send(arquivo)
+    existe = s.recv(1024)
+    print(existe)
+    if(existe == 'True'):
+        f = open(caminho_correto + arquivo, 'wb')
+        l = s.recv(1024)
+        while(l):
+            f.write(l)
+            l = s.recv(1024)
+        f.close()
+        print('Baixado')
+
+    else:
+        print('Arquivo ' + arquivo +' não existe.')
 
 def shell(s):
     s.send('2') # shell
@@ -109,15 +131,17 @@ def identificador(comando, s):
         print('{0}Comando errado ou não existe, digite {1}HELP{2} para obter ajuda dos comandos').format(END, RED, END)
         return
     else:
-        if(comando[0]=='upload'):
+        if(comando[0] == 'upload'):
             upload(s)
-        elif(comando[0]=='shell'):
+        elif(comando[0] == 'shell'):
             shell(s)
-        elif(comando[0]=='help' or comando[0]=='ajuda'):
+        elif(comando[0] == 'download'):
+            download(s)
+        elif(comando[0] == 'help' or comando[0] == 'ajuda'):
             ajuda()
-        elif(comando[0]=='clear'):
+        elif(comando[0] == 'clear'):
             os.system('clear')
-        elif(comando[0]=='exit'):
+        elif(comando[0] == 'exit'):
             sys.exit('Você escolheu sair')
         else:
             print('{0}Comando errado, digite {1}HELP{2} para obter ajuda dos comandos').format(END, RED, END)
