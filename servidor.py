@@ -124,19 +124,22 @@ def identificador(comando, s):
             return
 
 def conecta(meuIP):
+    enviado = False
     while True:
         porta=1025
         socket_obj = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         socket_obj.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # se der ctrl + c, ele para de escutar na porta
         socket_obj.bind((meuIP, porta))
         socket_obj.listen(1) # escutando conexões
-        print('{0}[+] Aguardando conexões...').format(GREEN)
+        if(enviado == False):
+            print('{0}[+] Aguardando conexões...').format(GREEN)
         try:
     	    conexao,endereco=socket_obj.accept()
         except KeyboardInterrupt:
             exit()
         retorno = conexao.recv(1024)
-        print(retorno)
+        if(enviado == False):
+            print(retorno)
         while True:
             try:
                 try:
@@ -145,8 +148,12 @@ def conecta(meuIP):
                     sys.exit()
                 identificador(comando, conexao)
             except socket.error as e:
-                print('Erro: '+ str(e))
-                break
+                if(str(e) == '[Errno 32] Broken pipe'):
+                    enviado = True
+                    break
+                else:
+                    print('Erro: '+ str(e))
+                    break
 
 if __name__ == '__main__':
     conecta('')
