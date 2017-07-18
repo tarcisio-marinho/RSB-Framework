@@ -13,3 +13,6 @@ Backdoor ou popularmente conhecido como cavalo de tróia, é um tipo de vírus q
 - [ ] Localização geográfica.
 - [ ] Trocar wallpaper do computador.
 - [ ] Programa completo.
+
+# Instalação
+  ~$ sudo pip install -r requeriments.txt
