@@ -83,9 +83,9 @@ def download(s):
     arquivo = s.recv(1024)
     print(arquivo)
     if(os.path.isfile(arquivo)):
-        s.send('True')
         f = open(arquivo, 'rb')
         l = f.read(1024)
+        l = 'True+/-' + l
         while(l):
             s.send(l)
             l = f.read(1024)

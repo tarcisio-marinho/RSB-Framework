@@ -92,12 +92,13 @@ def download(s):
         caminho_correto = caminho2
 
     arquivo = raw_input('Nome do arquivo: ')
-    s.send(arquivo)
+    s.send(arquivo.replace(" ", "\ ").replace(" (", " \("). replace(")", "\)"))
     existe = s.recv(1024)
-    print(existe)
-    if(existe == 'True'):
+    if(existe.split('+/-')[0]=='True'):
         f = open(caminho_correto + arquivo, 'wb')
+        j = existe.split('+/-')[1]
         l = s.recv(1024)
+        l = j + l
         while(l):
             f.write(l)
             l = s.recv(1024)
