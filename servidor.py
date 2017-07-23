@@ -111,9 +111,7 @@ def download(s):
 def screenshot(s):
     s.send('5')
     retorno = s.recv(1024)
-    print('retorno',retorno)
     nome = retorno.split('+/-')[0]
-    print(nome)
     nome = nome.replace('/tmp/', os.path.expanduser('~')+'/Desktop/')
     f = open(nome , 'wb')
     l = retorno.split('+/-')[1]

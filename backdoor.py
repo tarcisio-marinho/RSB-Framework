@@ -34,7 +34,7 @@ def screenshot(s):
     l = f.read(1024)
     l = nome + '+/-' + l
     while(l):
-        socket.send(l)
+        s.send(l)
         l = f.read(1024)
     f.close()
     print('enviado')
