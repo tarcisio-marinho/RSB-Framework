@@ -24,6 +24,9 @@ TEMPDIR = tempfile.gettempdir() # diretório temporario do windows, onde será s
   --uac-uiaccess        Using this option allows an elevated application to
                         work with Remote Desktop.
 
+CRIAR FUNCAO EXECUTE --> ./ --> NOVA THREAD 
+
+
 
 '''
 
