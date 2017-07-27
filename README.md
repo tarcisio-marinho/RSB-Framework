@@ -9,6 +9,7 @@ Backdoor ou popularmente conhecido como cavalo de tróia, é um tipo de vírus q
 - [x] Upload de arquivos para maquina.
 - [x] Persistencia.
 - [x] Screenshot.
+- [x] Executar outros programas na maquina da vitma.
 - [ ] Keylogger
 - [ ] Capturar senhas chrome.
 - [ ] Localização geográfica.
