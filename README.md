@@ -17,6 +17,16 @@ Backdoor is a computer virus popular known as trojan horse. It work's as a rever
  
     First the victim should run the backdoor compiled in the computer. 
     Then when the attacker run the servidor.py he shall get a reverse connection to the victim comuter.
+    
+Victim:
+    
+    python backdoor.py
+    
+Attacker:
+    
+    python servidor.py
+    
+    
  
  # Uses 
      It can be used to control the victim computer with de reverse shell.
