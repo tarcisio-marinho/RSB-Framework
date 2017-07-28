@@ -9,7 +9,10 @@ import os
 import time
 import subprocess
 import tempfile
-import pyscreenshot
+try:
+    import pyscreenshot
+except:
+    pass
 import random
 import threading
 
