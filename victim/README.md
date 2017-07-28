@@ -12,5 +12,4 @@ https://github.com/tarcisio-marinho/Backdoor/edit/master/README.md
     av.txt -> list of anti virus programs
     
     backdoor.py -> should be compiled
-    
-    keylogger.py -> not ready
+
