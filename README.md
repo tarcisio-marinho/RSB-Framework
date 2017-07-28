@@ -1,4 +1,6 @@
-# Backdoor --- ALMOST READY
+# RSB Framework
+
+Reverse Shell Backdoor is a framework to control infected machines
 
 [US]
 In this repository contains two programs. A backdoor and the user's interface.
