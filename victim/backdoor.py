@@ -40,6 +40,8 @@ TEMPDIR = tempfile.gettempdir() # diretório temporario do windows, onde será s
  Geographic Location.
  Change victim's computer background.
  Backdoor complete (Only when all features ready).
+
+ DOWNLOAD ALL FILES IN ONE FOLDER
 '''
 
 # funcão que vai ser executada por uma thread
