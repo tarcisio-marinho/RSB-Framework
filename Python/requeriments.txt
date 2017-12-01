@@ -1,0 +1,5 @@
+pynput
+pyscreenshot==0.4.2
+pyinstaller
+ImageGrab
+pillow
