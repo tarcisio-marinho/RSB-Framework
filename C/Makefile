@@ -4,7 +4,7 @@ OUTPUT=bin/thedoor
 RM=rm
 
 out: lib/communication.o lib/struct.o 
-	$(CC) gonnacry.o lib/communication.o lib/struct.o -o $(OUTPUT) $(CFLAGS) 
+	$(CC) thedoor.o lib/communication.o lib/struct.o -o $(OUTPUT) $(CFLAGS) 
 
 main: thedoor.c 
 	$(CC) -c thedoor.c 
