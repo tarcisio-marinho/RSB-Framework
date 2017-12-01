@@ -1,5 +1,6 @@
 #include "struct.h"
 
+
 void set_ip(Conn connection, char *ip){
     strcpy(connection.ip, ip);
 }

@@ -1,4 +1,7 @@
 #include"struct.h"
+#include <stdio.h>
+#include <stdlib.h>
+
 #ifndef COMUNICATION_H
 #define COMUNICATION_H
 
