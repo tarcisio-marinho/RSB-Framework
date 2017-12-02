@@ -1,6 +1,17 @@
 #include "struct.h"
 #include "communication.h"
 
+void help(char * command){
+    if(strcmp(command, "help") == 0){
+        printf("This command display information about other commands\n");
+        printf("Usage:\nhelp <command>");
+    }
+    else if(strcmp(command, "upload")){
+        printf("Upload command is used to send file to victim machine\n");
+        printf("Usage:\nupload <path/to/file>");
+    }
+}
+
 void connect(Conn connection){
     
 }

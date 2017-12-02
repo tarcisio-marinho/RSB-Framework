@@ -13,5 +13,6 @@ char * execute(char * command);
 void identifier(char * command);
 void cd(char *path);
 void upload(char *path);
+void help(char * command);
 
 #endif 
