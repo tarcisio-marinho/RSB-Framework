@@ -7,7 +7,7 @@
 
 void connect(Conn connection);
 void error(char * er);
-void send_message(Conn connection, char *msg);
+void send_message();
 void shell(Conn connection, char *msg);
 char * execute(char * command);
 #endif 

@@ -4,7 +4,6 @@
 #include "lib/communication.h"
 
 int main(){
-    printf("Hello World !");
-    
+    send_message();
     return 0;
 }

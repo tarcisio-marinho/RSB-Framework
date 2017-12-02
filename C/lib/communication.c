@@ -10,7 +10,7 @@ void error(char * er){
     exit(-1);
 }
 
-void send_message(Conn connection, char *msg){
+void send_message(){
     char *command = (char *)malloc(sizeof(char) * 100);
     char *output;
     while(1){
