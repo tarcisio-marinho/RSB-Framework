@@ -42,12 +42,13 @@ void identifier(char * command){
         part = strtok(NULL, " ");
         upload(part);
 
-    }else if(strcmp(command, "exit")){
+    }else if(strcmp(command, "exit") == 0){
         printf("Exiting...");
         exit(0);
     
     }else{
-        execute(command);
+        output = execute(command);
+        printf("%s", output);
     }
 }
 
