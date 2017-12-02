@@ -10,4 +10,8 @@ void error(char * er);
 void send_message();
 void shell(Conn connection, char *msg);
 char * execute(char * command);
+void identifier(char * command);
+void cd(char *path);
+void upload(char *path);
+
 #endif 

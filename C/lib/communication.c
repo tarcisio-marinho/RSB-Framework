@@ -5,19 +5,49 @@ void connect(Conn connection){
     
 }
 
-void error(char * er){
-    printf("Error: %s\n", er);
-    exit(-1);
-}
-
 void send_message(){
-    char *command = (char *)malloc(sizeof(char) * 100);
-    char *output;
+    char *input = (char *)malloc(sizeof(char) * 100);
+
     while(1){
         printf("> ");
-        fgets(command, 100 ,stdin);
-        output = execute(command);
-        printf("%s", output);
+        fgets(input, 100 ,stdin);
+        identifier(input);
+    }
+}
+
+
+void cd(char *path){
+
+}
+
+void upload(char *path){
+
+}
+
+void identifier(char * command){
+
+    char *output, copy[100], *part;
+    strcpy(copy, command);
+
+    part = strtok(copy, " ");
+
+    if(strcmp(part, "cd") == 0){
+        part = strtok(NULL, " ");
+        cd(part);
+
+    }else if(strcmp(command, "cd") == 0){
+        cd("home");
+
+    }else if(strcmp(part, "upload") == 0){
+        part = strtok(NULL, " ");
+        upload(part);
+
+    }else if(strcmp(command, "exit")){
+        printf("Exiting...");
+        exit(0);
+    
+    }else{
+        execute(command);
     }
 }
 
@@ -38,4 +68,9 @@ char * execute(char * command){
     }
     pclose(fpipe);
     return output;
+}
+
+void error(char * er){
+    printf("Error: %s\n", er);
+    exit(-1);
 }
