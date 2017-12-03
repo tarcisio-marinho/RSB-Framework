@@ -39,7 +39,9 @@ int main(){
         /* Connection Failed */
         
     }
-    send(connection , hello , strlen(hello) , 0 );
+    if(send(connection , hello , strlen(hello) , 0 ) == -1){
+        /* Failed sending message*/
+    }
     
     valread = read(connection, buffer, 1024);
     printf("%s\n",buffer );

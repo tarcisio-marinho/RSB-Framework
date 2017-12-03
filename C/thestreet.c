@@ -14,6 +14,7 @@ int main(){
     int server_fd, new_socket, valread;
     struct sockaddr_in address;
     int opt = 1;
+    int bytesSent = 0;
     int addrlen = sizeof(address);
     char buffer[1024] = {0};
     char *hello = "Hello from server";
@@ -56,7 +57,9 @@ int main(){
     }
     valread = read( new_socket , buffer, 1024);
     printf("%s\n",buffer );
-    send(new_socket , hello , strlen(hello) , 0 );
-    printf("Hello message sent\n");
+    
+    if(send(new_socket , hello , strlen(hello) , 0 ) == -1){
+        /* Failed sending message*/
+    }
     return 0;
 }
