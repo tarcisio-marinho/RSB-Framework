@@ -6,7 +6,6 @@
 #include<sys/unistd.h>
 #include<arpa/inet.h>
 
-#include "lib/struct.h"
 #include "lib/communication.h"
 #include "lib/commands.h"
 

@@ -4,7 +4,6 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
-#include "lib/struct.h"
 #include "lib/communication.h"
 #include "lib/commands.h"
 

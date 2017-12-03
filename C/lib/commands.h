@@ -1,7 +1,6 @@
 #ifndef COMMANDS_H
 #define COMMANDS_H
 #include "communication.h"
-#include "struct.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

@@ -1,8 +1,7 @@
-#include "struct.h"
 #include "communication.h"
 #include "commands.h"
 
-void connect(Conn connection){
+void connect(){
     
 }
 
