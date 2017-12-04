@@ -2,11 +2,16 @@
 #define COMUNICATION_H
 #include "include.h"
 
+/* Client functions */
 int connect_forever();
+char * interpreter(char * command);
+char * recv_message(int sock);
+
+/* Server functions */
 int listen_forever();
-void error(char * er);
 void send_message(int sock);
 void identifier(char * command);
+void error(char * er);
 
 
 #endif 

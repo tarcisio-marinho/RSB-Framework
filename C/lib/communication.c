@@ -1,8 +1,9 @@
 #include "include.h"
 
-/* Client functions*/
+/* Client functions */
 
 int connect_forever(){
+   
     struct sockaddr_in address;
     int sock = 0;
     struct sockaddr_in serv_addr;
@@ -61,6 +62,7 @@ char * interpreter(char * command){
     }else{
         output = execute(command);
     }
+    
     return output;
 }
 

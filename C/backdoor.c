@@ -8,17 +8,22 @@ int main(){
     char *output;
 
     while(1){
-        
+
         sock = connect_forever();
-
-        /* Connected */
-        bytes_sent = send(sock , ":)" , strlen(":)") , 0);
-
-        output = recv_message(sock);
-        if(output != NULL){
-            bytes_sent = send(sock, output, strlen(output), 0);
+        
+        while(1){
+            /* Connected */
+            
+            output = recv_message(sock);
+            if(output != NULL){
+                /* Still needs to check if connection is alive */
+                bytes_sent = send(sock, output, strlen(output), 0);
+            
+            }else{
+                /* Connection finished, try reconect */
+                break;
+            }
         }
-    }
-    
+    }    
     return 0;
 }
