@@ -1,5 +1,5 @@
-#include "communication.h"
-#include "commands.h"
+#include "include.h"
+
 
 int connect(){
     struct sockaddr_in address;

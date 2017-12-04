@@ -1,14 +1,14 @@
-#include "commands.h"
+#include "include.h"
 
-void cd(char *path){
-
-}
-
-void upload(char *path){
+void cd(char *path, int sock){
 
 }
 
-char * execute(char * command){
+void upload(char *path, int sock){
+
+}
+
+char * execute(char * command, int sock){
     FILE *fpipe;
     char line[256];
     char *output;

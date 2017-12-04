@@ -1,8 +1,6 @@
 #ifndef COMUNICATION_H
 #define COMUNICATION_H
-#include "commands.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include "include.h"
 
 int connect();
 int listen_forever();
