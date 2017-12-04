@@ -1,33 +1,30 @@
 #include "lib/include.h"
 
-#define PORT 8080
-#define IP "127.0.0.1"
-#define size 100
   
 int main(){
     
     int sock;
     
-    sock = connect();
+    sock = connect_forever();
     
     
     char msg[100];
     char buffer[1024] = {0};
-    int sock, valread, valsend;
+    int sock, bytes_read, bytes_sent;
     sock = connection();
 
     while(1){
         fgets(msg, 100, stdin);
-        valsend = send(sock , msg , strlen(msg) , 0 );
-        printf("%d", valsend);
+        bytes_sent = send(sock , msg , strlen(msg) , 0 );
+        printf("%d", bytes_sent);
         
 
-        valread = recv(sock , buffer, size, 0);
-        if(valread == 0 || valread == -1){
+        bytes_read = recv(sock , buffer, size, 0);
+        if(bytes_read == 0 || bytes_read == -1){
             printf("Server Disconnected\n");
             exit(-1);
         }
-        printf("%s\n",buffer );
+        printf("%s\n",buffer);
     }
     
     return 0;

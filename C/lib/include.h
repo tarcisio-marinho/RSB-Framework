@@ -16,4 +16,10 @@
 #include "communication.h"
 #include "commands.h"
 
+/* Defines */
+
+#define PORT 8080
+#define size 100
+#define IP "127.0.0.1"
+
 #endif

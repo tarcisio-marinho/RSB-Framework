@@ -1,7 +1,7 @@
 #include "include.h"
 
 
-int connect(){
+int connect_forever(){
     struct sockaddr_in address;
     int sock = 0;
     struct sockaddr_in serv_addr;

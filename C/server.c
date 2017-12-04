@@ -1,20 +1,18 @@
 #include "lib/include.h"
 
-#define PORT 8080
-#define size 100
 
 int main(){
     
-    int new_socket, valread;
+    int new_socket, bytes_read;
     char buffer[size] = {0};
     new_socket = listen_forever();
     while(1){
-        valread = recv( new_socket , buffer, size, 0);
-        if(valread == 0 || valread == -1){
+        bytes_read = recv( new_socket , buffer, size, 0);
+        if(bytes_read == 0 || bytes_read == -1){
             printf("Client Disconnected\n");
             exit(-1);
         }
-        printf("%d - %s\n", valread, buffer );
+        printf("%d - %s\n", bytes_read, buffer );
         memset(buffer , 0, sizeof(buffer));
     }
     return 0;
