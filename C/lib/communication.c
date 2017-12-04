@@ -44,16 +44,18 @@ int connect_forever(){
 char * interpreter(char * command){
     
     char *output, copy[size], *part;
+    int cd_output;
+
     strcpy(copy, command);
 
     part = strtok(copy, " ");
 
     if(strcmp(part, "cd") == 0){
         part = strtok(NULL, " ");
-        output = cd(part);
-
+        cd(part);
+        
     }else if(strcmp(command, "cd") == 0){
-        output = cd("home");
+        cd("home");
 
     }else if(strcmp(part, "upload") == 0){
         part = strtok(NULL, " ");

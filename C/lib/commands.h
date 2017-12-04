@@ -3,7 +3,7 @@
 #include "include.h"
 
 
-int cd(char *path);
+void cd(char *path);
 char * upload(char *path);
 void help(char * command);
 char * execute(char * command);

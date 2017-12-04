@@ -2,7 +2,7 @@
 
 
 /* Client commands */
-int cd(char *path){
+void cd(char *path){
     int output;
     char *username;
     char *new_path;
@@ -14,8 +14,7 @@ int cd(char *path){
         strcat(new_path, username);
     }
     new_path = path;
-    output = chdir(new_path);
-    return output;
+    chdir(new_path);
 }
 
 void upload(char *path){
