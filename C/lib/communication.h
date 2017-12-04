@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 int connect();
-int listen();
+int listen_forever();
 void error(char * er);
 void send_message();
 void identifier(char * command);
