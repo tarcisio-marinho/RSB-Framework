@@ -1,6 +1,8 @@
 #include "include.h"
 
-void cd(char *path, int sock){
+
+/* Client commands */
+char * cd(char *path, int sock){
 
 }
 
@@ -27,6 +29,8 @@ char * execute(char * command, int sock){
     return output;
 }
 
+
+/* Server functions */
 void help(char * command){
     
     if(strcmp(command, "default")){

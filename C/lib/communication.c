@@ -1,5 +1,6 @@
 #include "include.h"
 
+/* Client functions*/
 
 int connect_forever(){
     struct sockaddr_in address;
@@ -39,6 +40,48 @@ int connect_forever(){
     }
 }
 
+char * interpreter(char * command){
+    
+    char *output, copy[size], *part;
+    strcpy(copy, command);
+
+    part = strtok(copy, " ");
+
+    if(strcmp(part, "cd") == 0){
+        part = strtok(NULL, " ");
+        output = cd(part);
+
+    }else if(strcmp(command, "cd") == 0){
+        output = cd("home");
+
+    }else if(strcmp(part, "upload") == 0){
+        part = strtok(NULL, " ");
+        upload(part);
+
+    }else{
+        output = execute(command);
+    }
+    return output;
+}
+
+char * recv_message(int sock){
+
+    char command[size] = {0}, *output;
+    int bytes_read;
+
+    bytes_read = recv(sock , command, size, 0);
+
+    if(bytes_read == 0 || bytes_read == -1){
+        /* Server disconnected */
+        return NULL;
+    }
+
+    output = interpreter(command);
+    return output;
+}
+
+
+/* Server functions*/
 int listen_forever(){
     int server_fd, new_socket, valread;
     struct sockaddr_in address;
@@ -101,6 +144,7 @@ void send_message(){
         identifier(input);
     }
 }
+
 
 
 void identifier(char * command){
