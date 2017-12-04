@@ -3,9 +3,9 @@
 #include "include.h"
 
 
-void cd(char *path, int sock);
-void upload(char *path, int sock);
+int cd(char *path);
+char * upload(char *path);
 void help(char * command);
-char * execute(char * command, int sock);
+char * execute(char * command);
 
 #endif

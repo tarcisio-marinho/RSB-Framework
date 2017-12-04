@@ -2,15 +2,27 @@
 
 
 /* Client commands */
-char * cd(char *path, int sock){
+int cd(char *path){
+    int output;
+    char *username;
+    char *new_path;
+
+    if(strcmp(path, "home") == 0){
+        username = getlogin();
+        new_path = (char *)malloc(sizeof(char) * strlen(username) + 9);
+        strcpy(new_path, "/home/");
+        strcat(new_path, username);
+    }
+    new_path = path;
+    output = chdir(new_path);
+    return output;
+}
+
+void upload(char *path){
 
 }
 
-void upload(char *path, int sock){
-
-}
-
-char * execute(char * command, int sock){
+char * execute(char * command){
     FILE *fpipe;
     char line[256];
     char *output;
