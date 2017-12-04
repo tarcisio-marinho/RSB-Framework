@@ -4,7 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void connect();
+int connect();
+int listen();
 void error(char * er);
 void send_message();
 void identifier(char * command);

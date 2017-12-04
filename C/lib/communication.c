@@ -1,7 +1,45 @@
 #include "communication.h"
 #include "commands.h"
 
-void connect(){
+int connect(){
+    struct sockaddr_in address;
+    int sock = 0;
+    struct sockaddr_in serv_addr;
+    while(1){
+        int rest = 0;
+        if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+        {
+            printf("\n Socket creation error \n");
+            rest = 1;
+        }
+    
+        memset(&serv_addr, '0', sizeof(serv_addr));
+    
+        serv_addr.sin_family = AF_INET;
+        serv_addr.sin_port = htons(PORT);
+        
+        // Convert IPv4 and IPv6 addresses from text to binary form
+        if(inet_pton(AF_INET, "127.0.0.1", &serv_addr.sin_addr)<=0) 
+        {
+            printf("\nInvalid address/ Address not supported \n");
+            rest = 1;
+        }
+    
+        if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
+        {
+            printf("\nConnection Failed \n");
+            rest = 1;
+        }
+        if(rest == 1){
+            printf("Dormindo por 5 segundos");
+            sleep(5);
+            continue;
+        }
+        return sock;
+    }
+}
+
+int listen(){
     
 }
 
