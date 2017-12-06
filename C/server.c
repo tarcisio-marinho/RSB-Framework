@@ -6,6 +6,7 @@ int main(int argc, char *argv[]){
     int new_socket, error_output;
     char buffer[size] = {0};
     char output[MAX_TERMINAL_OUTPUT] = {0};
+    int isalive;
 
     while(1){
         printf("Trying to connect\n");
@@ -13,12 +14,13 @@ int main(int argc, char *argv[]){
         printf("Connected!\n");
 
         while(1){
+            isalive = 1;
             send_message(new_socket);
-
-            error_output = recv_client_message(new_socket);
-            if(error_output == err){
+            recv_client_message(new_socket, &isalive);
+            if(isalive == 0){
                 break;
             }
+            
         }
     }
     return 0;

@@ -10,7 +10,7 @@ char * recv_message(int sock);
 /* Server functions */
 int listen_forever();
 void send_message(int sock);
-int recv_client_message(int sock);
+void recv_client_message(int sock, int *isalive);
 void identifier(char * command, int sock);
 void error(char * er);
 
