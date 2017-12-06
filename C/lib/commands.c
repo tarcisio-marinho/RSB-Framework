@@ -30,7 +30,7 @@ char * execute(char * command){
     memset(output, 0, MAX_TERMINAL_OUTPUT);
 
     if (!(fpipe = (FILE*)popen(command,"r"))){
-        error("Pipe error");
+        return NULL;
     }
 
     while ( fgets( line, 256, fpipe)){

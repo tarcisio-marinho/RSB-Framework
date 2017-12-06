@@ -93,19 +93,16 @@ int listen_forever(){
     int addrlen = sizeof(address);
     char buffer[size] = {0};        
     while(1){
-        int rest = 0;
 
         // Creating socket file descriptor
         if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0){
-            perror("socket failed");
-            exit(EXIT_FAILURE);
+            error("socket failed");
         }
         
         // Forcefully attaching socket to the port 8080
         if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT,
                                                     &opt, sizeof(opt))){
-            perror("setsockopt");
-            exit(EXIT_FAILURE);
+            error("setsockopt");
         }
 
         address.sin_family = AF_INET;
@@ -115,26 +112,18 @@ int listen_forever(){
         // Forcefully attaching socket to the port 8080
         if (bind(server_fd, (struct sockaddr *)&address, 
                                     sizeof(address))<0){
-            perror("bind failed");
-            exit(EXIT_FAILURE);
+            error("bind failed");
         }
 
         if (listen(server_fd, 3) < 0){
-            perror("listen");
-            exit(EXIT_FAILURE);
+            error("listen");
         }
 
         if ((new_socket = accept(server_fd, (struct sockaddr *)&address, 
                         (socklen_t*)&addrlen))<0){
-            perror("accept");
-            exit(EXIT_FAILURE);
+            error("accept");
         }
         
-        if(rest == 1){
-            printf("Dormindo por 5 segundos");
-            sleep(5);
-            continue;
-        }
         return new_socket;
     }
 }
