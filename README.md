@@ -10,7 +10,7 @@ sockets and reverse connection, you should check it out.
 [![Travis branch](https://img.shields.io/travis/rust-lang/rust/master.svg)](https://github.com/tarcisio-marinho/RSB-Framework)
 [![Travis branch](https://img.shields.io/cran/l/devtools.svg)](https://github.com/tarcisio-marinho/RSB-Framework/blob/master/LICENSE)
 [![Travis branch](https://img.shields.io/badge/made%20with-%3C3-red.svg)](https://github.com/tarcisio-marinho/RSB-Framework)
-[![Travis branch](https://img.shields.io/github/stars/tarcisio-marinho/GonnaCry.svg)](https://github.com/tarcisio-marinho/RSB-Framework/stargazers)
+[![Travis branch](https://img.shields.io/github/stars/tarcisio-marinho/RSB-Framework.svg)](https://github.com/tarcisio-marinho/RSB-Framework/stargazers)
 
 # Disclaimer
 
