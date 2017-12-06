@@ -128,31 +128,41 @@ int listen_forever(){
     }
 }
 
-void send_message(){
-    char *input = (char *)malloc(sizeof(char) * 100);
+void send_message(int sock){
+    char *input = (char *)malloc(sizeof(char) * size);
 
     while(1){
-        printf("> ");
-        fgets(input, 100 ,stdin);
-        identifier(input);
+        printf(">>> ");
+        fgets(input, size ,stdin);
+        identifier(input, sock);
     }
 }
 
-void identifier(char * command){
+int recv_client_message(int sock){
+    
+    int bytes_read;
+    char output[MAX_TERMINAL_OUTPUT];
+
+    bytes_read = recv( sock , output, MAX_TERMINAL_OUTPUT, 0);
+    if(bytes_read == 0 || bytes_read == -1){
+        printf("Client Disconnected\n");
+        return err;
+
+    }else{
+        printf("%s\n", output );
+        memset(output , 0, sizeof(output));
+
+    } 
+}
+
+void identifier(char * command, int sock){
 
     char *output, copy[100], *part;
-    strcpy(copy, command);
 
+    strcpy(copy, command);
     part = strtok(copy, " ");
 
-    if(strcmp(part, "cd") == 0){
-        part = strtok(NULL, " ");
-        cd(part);
-
-    }else if(strcmp(command, "cd") == 0){
-        cd("home");
-
-    }else if(strcmp(part, "upload") == 0){
+    if(strcmp(part, "upload") == 0){
         part = strtok(NULL, " ");
         upload(part);
 
@@ -168,8 +178,7 @@ void identifier(char * command){
         exit(0);
     
     }else{
-        output = execute(command);
-        printf("%s", output);
+        send(sock, command, size, 0);
     }
 }
 
