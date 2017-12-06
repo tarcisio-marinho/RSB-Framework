@@ -4,7 +4,7 @@
 
 
 void cd(char *path);
-char * upload(char *path);
+void upload(char *path);
 void help(char * command);
 char * execute(char * command);
 

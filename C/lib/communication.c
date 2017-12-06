@@ -149,8 +149,6 @@ void send_message(){
     }
 }
 
-
-
 void identifier(char * command){
 
     char *output, copy[100], *part;

@@ -7,8 +7,9 @@ int main(){
     int bytes_read, bytes_sent;
     char *output;
 
-    while(1){
+while(1){
 
+        /* Create socket and start new communication */
         sock = connect_forever();
         
         while(1){

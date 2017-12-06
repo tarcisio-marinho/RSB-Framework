@@ -26,8 +26,8 @@ char * execute(char * command){
     char line[256];
     char *output;
     
-    output = (char *)malloc(sizeof(char) * 50000);
-    memset(output, 0, 50000);
+    output = (char *)malloc(sizeof(char) * MAX_TERMINAL_OUTPUT);
+    memset(output, 0, MAX_TERMINAL_OUTPUT);
 
     if (!(fpipe = (FILE*)popen(command,"r"))){
         error("Pipe error");
