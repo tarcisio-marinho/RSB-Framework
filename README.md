@@ -1,38 +1,47 @@
 # RSB Framework
 
-Reverse Shell Backdoor is a framework to control infected machines
+Reverse Shell Backdoor is a framework to control infected machines with some cool interactions.
+It's capable of send files, run programs in the background, screenshot and shit.
 
-[US]
-In this repository contains two programs. A backdoor and the user's interface.
-the backdoor need to be compiled sent to the victim and executed.
+There are two versions of the code, the C and Python. If you want to learn about
+sockets and reverse connection, you should check it out.
 
+
+# Disclaimer
+
+This Framework musn't be used to harm/threat/hurt other person's computer.
+
+It's purpose is only to share knowledge and awareness about Computer virus/Operating Sistems/Programming,  made for learning and awareness about secutiry.
+
+The program isn't complete nor all the funcionalities are working.
 
 
 # What's a backdoor ?
-Backdoor is a computer virus popular known as trojan horse. It work's as a reverse shell to victim computer.
+
+Backdoor is a computer virus popular known as trojan horse. It work's as a reverse shell to victim computer. So the attacker maintains access to victim computer after the bridge with some 
+system vulnerability exploitation.
 
 
 
 # How to use ? 
  
-    First the victim should run the backdoor compiled in the computer. 
-    Then when the attacker run the servidor.py he shall get a reverse connection to the victim comuter.
+First the victim should run the backdoor compiled in the computer. 
+Then when the attacker run the servidor.py he shall get a reverse connection to the victim comuter.
     
-Victim:
+**Victim:**
     
     python backdoor.py
     
-Attacker:
+**Attacker:**
     
     python servidor.py
     
     
  
  # Uses 
-     It can be used to control the victim computer with de reverse shell.
-     Also you can send and download files to the victim computer
-     Get persistence -> Even if the victim shutdown the computer, the backdoor will continue working.
-     Execute other programs or virus in the victims computer.
+ - It can be used to control the victim computer with a reverse shell.
+ - Also you can be used to controll your own computer without being home!
+ - Send and download files, run programs.
      
      
 # Backdoor features : 
@@ -42,61 +51,43 @@ Attacker:
 - [x] Persistence.
 - [x] Screenshot of the victim screen.
 - [x] Execute other programs in the victim computer.
-- [ ] Keylogger.
-- [ ] Capture Google-chrome passwords.
-- [ ] Geographic Location.
-- [ ] Change victim's computer background.
 - [ ] Backdoor complete (Only when all features ready).
 
 
 # Instalation
 
+If you want to run **Python** version you need to install all the dependecies
 
-you need to install all the dependecies to run the backdoor and server.
 
-
-linux:
+**linux**:
 
     ~$ sudo pip install -r requeriments.txt
-windows:
+**windows**:
 
     pip install -r requeriments.txt
+    
+If you want to run **C** code version you dont need to install any dependecies.
     
 
 # Compiling
 
-linux:
+The **Python code** needs to be compiled or be executed as a script (not recommended).
+
+**linux:**
 
     pyinstaller -F --clean -w backdoor.py -n backdoor
 
 
-windows:
+**windows:**
 
-    pyinstaller -F --clean -w backdoor.py -i icone.png -n foto.png.exe
+    pyinstaller -F --clean -w backdoor.py -i icon.png
 
-=============================================================================================== 
+The **C code** needs to be compiled.
 
+	~$ chmod +x comp.sh
+    ~$ sh comp.sh
+    
+or
 
-[BR]
-# O que é uma Backdoor?
-Backdoor ou popularmente conhecido como cavalo de tróia, é um tipo de vírus que ao infectar um computador, abre uma porta para o atacante conectar-se ao computador da vítma.
-
-# Objetivos:
-- [x] Conexão remota.
-- [x] Download arquivos da maquina infectada.
-- [x] Upload de arquivos para maquina.
-- [x] Persistencia.
-- [x] Screenshot.
-- [x] Executar outros programas na maquina da vitma.
-- [ ] Keylogger
-- [ ] Capturar senhas chrome.
-- [ ] Localização geográfica.
-- [ ] Trocar wallpaper do computador.
-- [ ] Programa completo.
-
-# Instalação
-  ~$ sudo pip install -r requeriments.txt
-
-# COMPILAR O BACKDOOR
-
-    ~$ pyinstaller -F --clean -w backdoor.py -i icone.png -n foto.png.exe
+	~$ gcc backdoor.c lib/communication.c  lib/commands.c -o bin/client
+	~$ gcc server.c lib/communication.c lib/commands.c -o bin/server
